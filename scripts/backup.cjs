@@ -150,7 +150,9 @@ function backupConfiguration() {
       "..",
       process.env.UPLOAD_DIR || "uploads/gifts",
     ),
-    root: path.resolve(__dirname, "../prisma/backups"),
+    root: path.resolve(
+      process.env.BACKUP_ROOT || path.resolve(__dirname, "../prisma/backups"),
+    ),
   };
 }
 async function main() {

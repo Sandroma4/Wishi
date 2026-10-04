@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter, Link } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
 import { cancelInvitation } from "@/app/actions/family";
+import { ShareLink } from "@/components/ui/ShareLink";
 import { Button } from "@/components/ui/Button";
 export function InvitationControls({
   id,
@@ -13,7 +14,6 @@ export function InvitationControls({
 }) {
   const locale = useLocale(),
     t = useTranslations("family"),
-    c = useTranslations("common"),
     errors = useTranslations("errors");
   const router = useRouter();
   const [pending, setPending] = useState(false),
@@ -33,25 +33,15 @@ export function InvitationControls({
       setPending(false);
     }
   }
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(
-        window.location.origin + "/" + locale + href,
-      );
-      setMessage(c("copied"));
-    } catch {
-      setMessage(errors("unexpected"));
-    }
-  }
   return (
     <div className="stack">
-      <Link className="break-word" href={href}>
-        {t("openInvitation")}
-      </Link>
+      <ShareLink
+        key={token}
+        href={"/" + locale + href}
+        title="Wishi"
+        help={t("invitationShareHelp")}
+      />
       <div className="button-row">
-        <Button variant="secondary" onClick={copy} disabled={pending}>
-          {c("copy")}
-        </Button>
         <Button variant="danger" onClick={revoke} disabled={pending}>
           {t("revokeInvitation")}
         </Button>

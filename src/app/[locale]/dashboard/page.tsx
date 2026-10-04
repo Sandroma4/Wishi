@@ -18,18 +18,48 @@ export default async function DashboardPage() {
       getFamilyWishlists(undefined, 5),
       auth(),
     ]);
-  const user = session?.user?.id
-    ? await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { name: true },
-      })
-    : null;
+  const [guide, user, familyCount] = await Promise.all([
+    getTranslations("onboarding"),
+    session?.user?.id
+      ? prisma.user.findUnique({
+          where: { id: session.user.id },
+          select: { name: true },
+        })
+      : null,
+    session?.user?.id
+      ? prisma.familyMember.count({ where: { userId: session.user.id } })
+      : 0,
+  ]);
   return (
     <div className="stack">
       <header>
         <h1>{t("hello", { name: user?.name || c("unknown") })}</h1>
         <p>{t("intro")}</p>
       </header>
+      {(!familyCount || !lists.length) && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{guide("title")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>{guide("intro")}</p>
+            <ol className="onboarding-steps">
+              <li>
+                <Link href="/dashboard/family">{guide("family")}</Link>
+                <p>{familyCount ? guide("familyDone") : guide("familyHelp")}</p>
+              </li>
+              <li>
+                <Link href="/dashboard/wishlists/create">{guide("list")}</Link>
+                <p>{lists.length ? guide("listDone") : guide("listHelp")}</p>
+              </li>
+              <li>
+                <Link href="/dashboard/wishlists">{guide("share")}</Link>
+                <p>{guide("shareHelp")}</p>
+              </li>
+            </ol>
+          </CardContent>
+        </Card>
+      )}
       <div className={styles.grid}>
         <Card>
           <CardHeader>

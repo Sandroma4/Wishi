@@ -20,6 +20,7 @@ export function ReserveButton({
   const router = useRouter();
   const t = useTranslations("wishlist");
   const errors = useTranslations("errors");
+  const sharing = useTranslations("sharing");
   async function click() {
     setPending(true);
     setError("");
@@ -36,14 +37,14 @@ export function ReserveButton({
     }
   }
   return (
-    <div className="stack">
+    <div className="stack" aria-busy={pending}>
       <Button
         disabled={pending || (isReserved && !reservedByMe)}
         variant={isReserved ? "secondary" : "primary"}
         onClick={click}
       >
         {pending
-          ? "…"
+          ? sharing("pending")
           : t(
               reservedByMe
                 ? "cancelReservation"

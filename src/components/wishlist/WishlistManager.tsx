@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import { changeShareLink } from "@/app/actions/wishlist";
 import { Button } from "@/components/ui/Button";
+import { ShareLink } from "@/components/ui/ShareLink";
 export function WishlistManager({
   id,
   visibility,
@@ -14,7 +15,6 @@ export function WishlistManager({
   token: string | null;
 }) {
   const t = useTranslations("wishlist");
-  const c = useTranslations("common");
   const errors = useTranslations("errors");
   const locale = useLocale();
   const router = useRouter();
@@ -35,9 +35,13 @@ export function WishlistManager({
     }
   }
   return (
-    <div className="stack">
+    <div className="stack" aria-busy={pending}>
       {visibility === "PUBLIC" && (
-        <a href={"/" + locale + "/lists/" + id}>{t("viewList")}</a>
+        <ShareLink
+          href={"/" + locale + "/lists/" + id}
+          title="Wishi"
+          help={t("publicShareHelp")}
+        />
       )}
       {visibility === "LINK" && (
         <>
@@ -56,28 +60,7 @@ export function WishlistManager({
               </Button>
             )}
           </div>
-          {link && (
-            <>
-              <a className="break-word" href={link}>
-                {link}
-              </a>
-              <Button
-                variant="secondary"
-                onClick={async () => {
-                  try {
-                    await navigator.clipboard.writeText(
-                      window.location.origin + link,
-                    );
-                    setMessage(c("copied"));
-                  } catch {
-                    setMessage(errors("unexpected"));
-                  }
-                }}
-              >
-                {c("copy")}
-              </Button>
-            </>
-          )}
+          {link && <ShareLink key={link} href={link} title="Wishi" />}
         </>
       )}
       {message && <p role="status">{message}</p>}

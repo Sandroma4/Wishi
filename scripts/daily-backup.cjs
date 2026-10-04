@@ -67,7 +67,10 @@ module.exports = { dailyBackup };
 if (require.main === module)
   dailyBackup({
     ...backupConfiguration(),
-    statusFile: path.resolve(__dirname, "../.local/backup-status.json"),
+    statusFile: path.resolve(
+      process.env.BACKUP_STATUS_FILE ||
+        path.resolve(__dirname, "../.local/backup-status.json"),
+    ),
     externalRoot: process.env.BACKUP_EXTERNAL_DIR?.trim() || undefined,
   })
     .then((result) =>

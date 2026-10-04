@@ -199,3 +199,8 @@ summary {
   background: var(--secondary);
   border-radius: var(--radius);
 }
+.onboarding-steps { display: grid; gap: 1rem; padding-left: 1.5rem; margin-top: 1rem; }
+.onboarding-steps p { margin-top: .35rem; }
+.share-qr { margin: 0; max-width: 100%; }
+.share-qr img { display: block; max-width: 100%; height: auto; background: white; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }

@@ -76,7 +76,7 @@ export function AuthForm({
         </CardHeader>
         <CardContent>
           {passwordChanged && <p role="status">{recovery("resetSuccess")}</p>}
-          <form action={submit} className="stack">
+          <form action={submit} className="stack" aria-busy={pending}>
             {error && <p role="alert">{error}</p>}
             {register && (
               <Input
@@ -105,9 +105,10 @@ export function AuthForm({
               autoComplete={register ? "new-password" : "current-password"}
               minLength={register ? 12 : 1}
               maxLength={register ? 72 : 128}
+              aria-describedby={register ? "password-hint" : undefined}
               required
             />
-            {register && <p>{t("passwordHint")}</p>}
+            {register && <p id="password-hint">{t("passwordHint")}</p>}
             <Button disabled={pending}>
               {t(
                 pending

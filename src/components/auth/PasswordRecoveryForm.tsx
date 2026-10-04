@@ -52,7 +52,7 @@ export function PasswordRecoveryForm({
             ) : success ? (
               <p role="status">{t(token ? "resetSuccess" : "sent")}</p>
             ) : (
-              <form action={submit} className="stack">
+              <form action={submit} className="stack" aria-busy={pending}>
                 {error && <p role="alert">{error}</p>}
                 {token ? (
                   <>
@@ -65,8 +65,9 @@ export function PasswordRecoveryForm({
                       minLength={12}
                       maxLength={72}
                       required
+                      aria-describedby="recovery-password-hint"
                     />
-                    <p>{a("passwordHint")}</p>
+                    <p id="recovery-password-hint">{a("passwordHint")}</p>
                     <Input
                       id="confirmation"
                       name="confirmation"

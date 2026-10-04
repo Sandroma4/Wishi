@@ -125,3 +125,9 @@ Google Drive est connecté et une première sauvegarde privée a été téléver
 ## Suivi email et hébergement
 
 `npm run email:status` affiche la dernière acceptation et le dernier échec, sans adresse ni lien secret. Voir [le suivi privé](docs/email-setup.md) et [la préparation du stockage en hébergement](docs/hosting-preparation.md). Le mode `resend.dev` est réservé aux tests et ne satisfait pas le contrôle de lancement pour les proches.
+
+## Accueil, partage et sauvegarde hébergée
+
+Le tableau de bord guide les premiers pas tant que l’utilisateur n’a pas de famille ou de liste. Les liens publics, liens de liste et invitations disposent de copie, partage sur l’appareil et QR code généré localement, avec copie manuelle de secours. Les QR codes suivent la révocation et le renouvellement des liens.
+
+`npm start` lance le serveur et, sur Railway avec un volume monté, un processus de sauvegarde quotidienne vérifiée. Voir [les limites et le contrôle des sauvegardes hébergées](docs/hosted-backups.md). Aucune nouvelle offre payante n’est activée.

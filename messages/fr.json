@@ -99,7 +99,8 @@
     "model": "Modèle",
     "photo": "Photo du cadeau",
     "photoHint": "JPEG, PNG ou WebP, 5 Mo maximum.",
-    "removePhoto": "Supprimer la photo actuelle"
+    "removePhoto": "Supprimer la photo actuelle",
+    "publicShareHelp": "Cette liste est publique. Un compte est requis pour réserver. Vos réservations restent cachées au propriétaire."
   },
   "family": {
     "title": "Espace Famille",
@@ -134,7 +135,8 @@
     "revokeInvitation": "Révoquer",
     "confirmRevoke": "Révoquer cette invitation ? Son lien ne permettra plus de rejoindre la famille.",
     "invitationSaved": "Invitation enregistrée. Retrouvez son lien dans les invitations en attente.",
-    "invitationReplacement": "Un nouveau lien pour la même adresse remplace son ancienne invitation."
+    "invitationReplacement": "Un nouveau lien pour la même adresse remplace son ancienne invitation.",
+    "invitationShareHelp": "Envoyez ce lien uniquement à la personne invitée. Elle doit utiliser l’adresse email de l’invitation."
   },
   "common": {
     "language": "Langue",
@@ -290,5 +292,30 @@
     "restore": "Restaurer le cadeau",
     "restoring": "Restauration…",
     "restored": "Le cadeau « {name} » a été restauré."
+  },
+  "sharing": {
+    "title": "Partager",
+    "open": "Ouvrir le lien",
+    "copy": "Copier le lien",
+    "share": "Partager sur mon appareil",
+    "qr": "Afficher le QR code",
+    "copied": "Lien copié",
+    "manualCopy": "La copie automatique a échoué. Sélectionnez le lien ci-dessous pour le copier.",
+    "link": "Lien à copier",
+    "qrAlt": "QR code du lien de partage",
+    "scan": "Scannez ce code pour ouvrir le lien.",
+    "pending": "Préparation…"
+  },
+  "onboarding": {
+    "title": "Vos premiers pas sur Wishi",
+    "intro": "Préparez votre première liste et retrouvez vos proches.",
+    "family": "Créer ou rejoindre une famille",
+    "familyHelp": "Créez votre famille ici, ou ouvrez le lien envoyé par un proche pour la rejoindre.",
+    "list": "Créer ma première liste",
+    "listHelp": "Ajoutez vos idées de cadeaux, avec une photo et un prix si vous le souhaitez.",
+    "share": "Partager et garder la surprise",
+    "shareHelp": "Choisissez qui peut consulter votre liste. Vous ne verrez pas qui réserve vos cadeaux.",
+    "familyDone": "Famille rejointe",
+    "listDone": "Première liste créée"
   }
 }

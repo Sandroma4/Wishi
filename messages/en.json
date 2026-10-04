@@ -99,7 +99,8 @@
     "model": "Model",
     "photo": "Gift photo",
     "photoHint": "JPEG, PNG or WebP, up to 5 MB.",
-    "removePhoto": "Remove current photo"
+    "removePhoto": "Remove current photo",
+    "publicShareHelp": "This list is public. Sign in to reserve. Reservations stay hidden from the owner."
   },
   "family": {
     "title": "Family Space",
@@ -134,7 +135,8 @@
     "revokeInvitation": "Revoke",
     "confirmRevoke": "Revoke this invitation? Its link will no longer allow joining the family.",
     "invitationSaved": "Invitation saved. Find its link in pending invitations.",
-    "invitationReplacement": "A new link for the same email replaces its previous invitation."
+    "invitationReplacement": "A new link for the same email replaces its previous invitation.",
+    "invitationShareHelp": "Send this link only to the invited person. They must use the invitation email address."
   },
   "common": {
     "language": "Language",
@@ -290,5 +292,30 @@
     "restore": "Restore gift",
     "restoring": "Restoring…",
     "restored": "The gift “{name}” has been restored."
+  },
+  "sharing": {
+    "title": "Share",
+    "open": "Open link",
+    "copy": "Copy link",
+    "share": "Share on my device",
+    "qr": "Show QR code",
+    "copied": "Link copied",
+    "manualCopy": "Automatic copying failed. Select the link below to copy it.",
+    "link": "Link to copy",
+    "qrAlt": "QR code for the sharing link",
+    "scan": "Scan this code to open the link.",
+    "pending": "Preparing…"
+  },
+  "onboarding": {
+    "title": "Getting started with Wishi",
+    "intro": "Create your first wishlist and connect with your family.",
+    "family": "Create or join a family",
+    "familyHelp": "Create your family here, or open an invitation link from a relative to join.",
+    "list": "Create my first wishlist",
+    "listHelp": "Add gift ideas, with an optional photo and price.",
+    "share": "Share and keep the surprise",
+    "shareHelp": "Choose who can view your list. You will not see who reserves your gifts.",
+    "familyDone": "Family joined",
+    "listDone": "First wishlist created"
   }
 }
