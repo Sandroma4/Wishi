@@ -38,11 +38,16 @@ export function WishlistManager({
   }
   return (
     <section
-      className="stack gift-preview"
+      className="stack gift-preview wishlist-sharing"
       aria-busy={pending}
       aria-label={flow("sharingTitle")}
     >
-      <h2>{flow("sharingTitle")}</h2>
+      <div className="wishlist-sharing-heading">
+        <h2>{flow("sharingTitle")}</h2>
+        <span className="visual-badge">
+          {t("visibility" + visibility[0] + visibility.slice(1).toLowerCase())}
+        </span>
+      </div>
       <p>{help(visibility.toLowerCase() + "Help")}</p>
       {visibility === "FAMILY" && (
         <Link className="primary-link" href="/dashboard/family">
@@ -51,7 +56,7 @@ export function WishlistManager({
       )}
       {visibility === "PRIVATE" && <p>{flow("privateSharing")}</p>}
       {visibility === "PUBLIC" && (
-        <ShareLink href={"/" + locale + "/lists/" + id} title="Wishi" />
+        <ShareLink href={"/" + locale + "/lists/" + id} title="Cadéoly" />
       )}
       {visibility === "LINK" && (
         <>
@@ -74,7 +79,7 @@ export function WishlistManager({
               </Button>
             )}
           </div>
-          {link && <ShareLink key={link} href={link} title="Wishi" />}
+          {link && <ShareLink key={link} href={link} title="Cadéoly" />}
         </>
       )}
       {message && <p role="status">{message}</p>}

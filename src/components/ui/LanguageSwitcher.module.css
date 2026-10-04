@@ -14,6 +14,9 @@
 }
 
 .toggleBtn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   background: transparent;
   border: none;
   color: var(--muted-foreground);
@@ -24,6 +27,13 @@
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
+}
+
+.flag {
+  display: block;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 15%);
 }
 
 .toggleBtn.active {

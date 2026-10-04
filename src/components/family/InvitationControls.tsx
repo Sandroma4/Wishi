@@ -52,7 +52,7 @@ export function InvitationControls({
       <ShareLink
         key={token}
         href={"/" + locale + href}
-        title="Wishi"
+        title="Cadéoly"
         help={t("invitationShareHelp")}
       />
       <div className="button-row">

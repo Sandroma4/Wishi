@@ -61,12 +61,15 @@ export function CreateEventForm({
             label={t("date")}
             required
           />
-          <Input
-            id="event-description"
-            name="description"
-            label={t("description")}
-            maxLength={2000}
-          />
+          <details className="form-options">
+            <summary>{t("description")}</summary>
+            <Input
+              id="event-description"
+              name="description"
+              label={t("description")}
+              maxLength={2000}
+            />
+          </details>
           <label htmlFor="event-family">{t("family")}</label>
           <select id="event-family" name="familyId" required>
             {families.map((f) => (

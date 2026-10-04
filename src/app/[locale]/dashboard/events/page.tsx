@@ -68,16 +68,11 @@ export default async function EventsPage({
                         : "familyFirst",
                   )}
                 </p>
-                {!past &&
-                  (families.length ? (
-                    <a className="primary-link" href="#create-event-form">
-                      {t("createEvent")}
-                    </a>
-                  ) : (
-                    <Link className="primary-link" href="/dashboard/family">
-                      {flow("createFamily")}
-                    </Link>
-                  ))}
+                {!past && !families.length && (
+                  <Link className="primary-link" href="/dashboard/family">
+                    {flow("createFamily")}
+                  </Link>
+                )}
               </CardContent>
             </Card>
           ) : (
@@ -114,11 +109,8 @@ export default async function EventsPage({
 
         <div className={styles.sideContent}>
           {families.length > 0 && (
-            <details
-              className="form-options creation-panel"
-              open={!events.length && !past}
-            >
-              <summary>{t("createEvent")}</summary>
+            <details className="form-options creation-panel">
+              <summary className="creation-trigger">{t("createEvent")}</summary>
               <CreateEventForm families={families} showTitle={false} />
             </details>
           )}

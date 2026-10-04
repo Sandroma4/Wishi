@@ -54,11 +54,11 @@ export async function readPublicResource(
         {
           agent: false,
           family: 4,
-      ...{ autoSelectFamily: false },
+          ...{ autoSelectFamily: false },
           lookup: (_host, _options, callback) =>
             callback(null, addresses[0].address, 4),
           headers: {
-            "User-Agent": "Wishi/1.0 (product preview)",
+            "User-Agent": "Cadéoly/1.0 (product preview)",
             Accept:
               kind === "html" ? "text/html" : "image/jpeg,image/png,image/webp",
             "Accept-Encoding": "identity",
@@ -111,8 +111,22 @@ export async function readPublicResource(
   return { bytes: response.bytes!, url: url.toString() };
 }
 function decode(value: string) {
-  const entities: Record<string,string> = { eacute: "é", egrave: "è", ecirc: "ê", agrave: "à", acirc: "â", ccedil: "ç", ocirc: "ô", ugrave: "ù", ucirc: "û", nbsp: " " };
-  value = value.replace(/&([a-z]+);/gi, (match, name) => entities[name.toLowerCase()] || match);
+  const entities: Record<string, string> = {
+    eacute: "é",
+    egrave: "è",
+    ecirc: "ê",
+    agrave: "à",
+    acirc: "â",
+    ccedil: "ç",
+    ocirc: "ô",
+    ugrave: "ù",
+    ucirc: "û",
+    nbsp: " ",
+  };
+  value = value.replace(
+    /&([a-z]+);/gi,
+    (match, name) => entities[name.toLowerCase()] || match,
+  );
   return value
     .replace(
       /&(?:amp|quot|apos|lt|gt|#39|#(\d+)|#x([0-9a-f]+));/gi,
@@ -150,23 +164,85 @@ export function parseProduct(html: string, base: string) {
     if (key && attrs.content && !meta[key.toLowerCase()])
       meta[key.toLowerCase()] = attrs.content;
   }
+  const amazon =
+    /(^|\.)amazon\.(fr|com|de|it|es|nl|pl|se|com\.be|co\.uk|ca|com\.au|co\.jp)$/.test(
+      new URL(base).hostname,
+    );
+  if (
+    amazon &&
+    /(?:id=["']captchacharacters["']|action=["'][^"']*validateCaptcha)/i.test(
+      html,
+    )
+  )
+    return { title: "", price: "", image: "" };
+  const amazonTitle = amazon
+    ? decode(
+        html
+          .match(
+            /<span\b[^>]*\bid=["']productTitle["'][^>]*>([\s\S]*?)<\/span>/i,
+          )?.[1]
+          .replace(/<[^>]*>/g, " ") || "",
+      )
+    : "";
   const title = (
+    amazonTitle ||
     meta["og:title"] ||
     meta["twitter:title"] ||
     decode(html.match(/<title\b[^>]*>([^<]*)<\/title>/i)?.[1] || "")
   ).slice(0, 120);
+  let amazonPrice = "";
+  if (amazon) {
+    const label =
+      html.match(
+        /<span\b[^>]*\bid=["']apex-pricetopay-accessibility-label["'][^>]*>([\s\S]*?)<\/span>/i,
+      )?.[1] || "";
+    const amount = decode(label.replace(/<[^>]*>/g, "")).match(
+      /^(\d[\d .]*[,.]\d{2})\s*€$/,
+    );
+    if (amount) amazonPrice = amount[1].replace(/[ .]/g, "").replace(",", ".");
+  }
   const currency = meta["product:price:currency"] || meta["og:price:currency"];
   const rawPrice =
     meta["product:price:amount"] || meta["og:price:amount"] || "";
-  const price =
+  let price =
     /^\d+(?:[.,]\d{1,2})?$/.test(rawPrice) &&
     currency === "EUR" &&
     Number(rawPrice.replace(",", ".")) <= 9999999.99
       ? Number(rawPrice.replace(",", ".")).toFixed(2)
       : "";
+  if (
+    !price &&
+    /^\d{1,7}\.\d{2}$/.test(amazonPrice) &&
+    Number(amazonPrice) <= 9999999.99
+  )
+    price = amazonPrice;
   let image = "";
   try {
-    const raw = meta["og:image"] || meta["twitter:image"];
+    const tag = amazon
+      ? html.match(/<img\b[^>]*\bid=["']landingImage["'][^>]*>/i)?.[0] || ""
+      : "";
+    const attr = (name: string) =>
+      decode(
+        tag
+          .match(new RegExp(name + "\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)')", "i"))
+          ?.slice(1)
+          .find(Boolean) || "",
+      );
+    let amazonImage = attr("data-old-hires") || attr("src");
+    try {
+      const candidates = JSON.parse(attr("data-a-dynamic-image") || "{}");
+      amazonImage =
+        Object.entries(candidates)
+          .filter(
+            (entry): entry is [string, number[]] =>
+              Array.isArray(entry[1]) &&
+              entry[1].length === 2 &&
+              entry[1].every((value) => typeof value === "number"),
+          )
+          .sort((a, b) => b[1][0] * b[1][1] - a[1][0] * a[1][1])[0]?.[0] ||
+        amazonImage;
+    } catch {}
+    const raw = meta["og:image"] || meta["twitter:image"] || amazonImage;
     if (raw) image = productUrl(new URL(raw, base).toString()).toString();
   } catch {}
   return { title, price, image };

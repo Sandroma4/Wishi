@@ -1,3 +1,4 @@
+import { OccasionIcon } from "@/components/ui/OccasionIcon";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { readMyReservations } from "@/lib/wishlist-service";
@@ -19,8 +20,25 @@ export default async function ReservationsPage() {
   const t = await getTranslations("reservations");
   return (
     <div className="stack">
-      <h1>{t("title")}</h1>
-      <p>{t("intro")}</p>
+      <header className="page-heading">
+        <h1>{t("title")}</h1>
+        <p className="page-intro">{t("intro")}</p>
+      </header>
+      <p className="privacy-note">
+        <svg
+          aria-hidden="true"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+        >
+          <rect x="5" y="10" width="14" height="11" rx="2" />
+          <path d="M8 10V6a4 4 0 0 1 8 0v4" />
+        </svg>{" "}
+        {t("privacy")}
+      </p>
       {!!contributions.length && (
         <section className="stack">
           <h2>{group("title")}</h2>
@@ -39,7 +57,19 @@ export default async function ReservationsPage() {
           ))}
         </section>
       )}
-      {!reservations.length && <p>{t("empty")}</p>}
+      {!reservations.length && (
+        <Card>
+          <CardContent className="welcoming-empty">
+            <div className="empty-art">
+              <OccasionIcon />
+            </div>
+            <p>{t("empty")}</p>
+            <Link className="primary-link" href="/dashboard/family">
+              {t("explore")}
+            </Link>
+          </CardContent>
+        </Card>
+      )}
       <div className="gift-grid">
         {reservations.map(({ itemId, gift }) => (
           <Card key={itemId}>

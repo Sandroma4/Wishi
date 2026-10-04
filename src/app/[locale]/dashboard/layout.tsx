@@ -1,3 +1,4 @@
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { cookies } from "next/headers";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import styles from "./layout.module.css";
@@ -9,6 +10,7 @@ import { prisma } from "@/lib/prisma";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { DashboardNavigation } from "@/components/dashboard/DashboardNavigation";
+import { OptionsMenu } from "@/components/dashboard/OptionsMenu";
 export default async function DashboardLayout({
   children,
   params,
@@ -31,19 +33,48 @@ export default async function DashboardLayout({
     <div className={styles.dashboard}>
       <aside className={styles.sidebar}>
         <div className={styles.logo}>
-          <h2>Wishi</h2>
+          <h2>
+            <BrandLogo />
+          </h2>
         </div>
         <DashboardNavigation />
-        <details className={styles.settings}>
-          <summary>{t("displaySettings")}</summary>
+        <OptionsMenu className={styles.settings} label={t("displaySettings")}>
           <div className={styles.settingsPanel}>
-            <Link href="/dashboard/profile">{t("myProfile")}</Link>
-            <LanguageSwitcher />
-            <ThemeSwitcher initial={theme} />
-            <Link href="/dashboard/feedback">{t("navFeedback")}</Link>
-            <SignOutButton />
+            <Link href="/dashboard/profile" className={styles.optionsProfile}>
+              <svg
+                aria-hidden="true"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21v-2a8 8 0 0 1 16 0v2" />
+              </svg>
+              <span>{t("myProfile")}</span>
+              <span aria-hidden="true" className={styles.optionsArrow}>
+                ›
+              </span>
+            </Link>
+            <div className={styles.optionsGroup}>
+              <span className={styles.optionsLabel}>
+                {t("optionsLanguage")}
+              </span>
+              <LanguageSwitcher />
+            </div>
+            <div className={styles.optionsGroup}>
+              <span className={styles.optionsLabel}>
+                {t("optionsAppearance")}
+              </span>
+              <ThemeSwitcher initial={theme} />
+            </div>
+            <div className={styles.optionsLogout}>
+              <SignOutButton />
+            </div>
           </div>
-        </details>
+        </OptionsMenu>
         <Link href="/dashboard/profile" className={styles.profile}>
           <div className={styles.avatar}>
             {user.name?.[0]?.toUpperCase() || "U"}

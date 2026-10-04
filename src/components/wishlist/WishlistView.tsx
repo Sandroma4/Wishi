@@ -31,46 +31,67 @@ export async function WishlistView({
     <div className="stack" id="list-gifts">
       <header>
         <h1>{wishlist.name}</h1>
-        <p>{t("byOwner", { name: wishlist.owner.name || c("unknown") })}</p>
-        {wishlist.event && (
-          <p>
-            {t("event")}: {wishlist.event.name}
-          </p>
-        )}
+        <div className="wishlist-header-meta">
+          <p>{t("byOwner", { name: wishlist.owner.name || c("unknown") })}</p>
+          {wishlist.event && (
+            <p>
+              {t("event")}: {wishlist.event.name}
+            </p>
+          )}
+          {wishlist.occasion && (
+            <p>
+              {t("occasion")}: {wishlist.occasion}
+            </p>
+          )}
+          {wishlist.neededBy && (
+            <p>
+              {t("neededBy")}:{" "}
+              {new Intl.DateTimeFormat(locale, {
+                dateStyle: "long",
+                timeZone: "UTC",
+              }).format(new Date(wishlist.neededBy + "T00:00:00Z"))}
+            </p>
+          )}
+        </div>
       </header>
       {wishlist.description && <p>{wishlist.description}</p>}
-      {wishlist.occasion && (
-        <p>
-          {t("occasion")}: {wishlist.occasion}
-        </p>
-      )}
-      {wishlist.neededBy && (
-        <p>
-          {t("neededBy")}:{" "}
-          {new Intl.DateTimeFormat(locale, {
-            dateStyle: "long",
-            timeZone: "UTC",
-          }).format(new Date(wishlist.neededBy + "T00:00:00Z"))}
-        </p>
-      )}
       {wishlist.preferences && (
         <p style={{ whiteSpace: "pre-wrap" }}>{wishlist.preferences}</p>
       )}
       {wishlist.isOwner && (
         <>
-          <p>{t("surprise")}</p>
-          {wishlist.canEdit && <AddItemForm wishlistId={wishlist.id} />}
+          <p className="wishlist-privacy-note">
+            <svg
+              aria-hidden="true"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <rect x="5" y="10" width="14" height="11" rx="2" />
+              <path d="M8 10V6a4 4 0 0 1 8 0v4" />
+            </svg>{" "}
+            {t("surprise")}
+          </p>
+          {wishlist.canEdit && wishlist.items.length > 0 && (
+            <AddItemForm wishlistId={wishlist.id} />
+          )}
         </>
       )}
       {!wishlist.items.length && (
-        <div className="empty-state">
-          <div className="empty-art">
-            <OccasionIcon />
+        <div className="empty-state wishlist-empty">
+          <div className="wishlist-empty-intro">
+            <div className="empty-art">
+              <OccasionIcon />
+            </div>
+            <p>{wishlist.canEdit ? flow("firstWish") : t("noItems")}</p>
+            <p>
+              {flow(wishlist.canEdit ? "emptyGiftsOwner" : "emptyGiftsVisitor")}
+            </p>
           </div>
-          <p>{t("noItems")}</p>
-          <p>
-            {flow(wishlist.canEdit ? "emptyGiftsOwner" : "emptyGiftsVisitor")}
-          </p>
+          {wishlist.canEdit && <AddItemForm wishlistId={wishlist.id} />}
         </div>
       )}
       {wishlist.items.length > 0 && (
@@ -109,11 +130,12 @@ export async function WishlistView({
                     (item.url.startsWith("https://") ||
                       item.url.startsWith("http://")) && (
                       <a
+                        className="product-link"
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {t("viewProduct")}
+                        {t("viewProduct")} <span aria-hidden="true">↗</span>
                       </a>
                     )}
                 </CardContent>

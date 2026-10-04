@@ -9,7 +9,8 @@ async function recordDelivery(
 ) {
   try {
     const directory = path.resolve(
-      /* turbopackIgnore: true */ process.env.EMAIL_STATUS_DIR || ".local/email-status",
+      /* turbopackIgnore: true */ process.env.EMAIL_STATUS_DIR ||
+        ".local/email-status",
     );
     await mkdir(directory, { recursive: true, mode: 0o700 });
     const temporary = path.join(directory, randomUUID() + ".tmp");
@@ -25,7 +26,7 @@ async function recordDelivery(
     );
     await rename(temporary, path.join(directory, outcome + ".json"));
   } catch {
-    console.error("Wishi email monitoring unavailable");
+    console.error("Cadéoly email monitoring unavailable");
   }
 }
 export function mailConfiguration() {
@@ -69,11 +70,14 @@ export async function sendResetMail(
   ).toString();
   const english = locale === "en";
   const message = {
-    from: process.env.MAIL_FROM || "Wishi <local@example.test>",
+    from: (process.env.MAIL_FROM || "Cadéoly <local@example.test>").replace(
+      /^Wishi(?=\s*<)/,
+      "Cadéoly",
+    ),
     to: email,
     subject: english
-      ? "Reset your Wishi password"
-      : "Réinitialiser votre mot de passe Wishi",
+      ? "Reset your Cadéoly password"
+      : "Réinitialiser votre mot de passe Cadéoly",
     text: english
       ? `Choose a new password using this link (valid for 30 minutes, once only):\n${url}\n\nIf you did not request this, ignore this email.`
       : `Choisissez un nouveau mot de passe avec ce lien (valable 30 minutes, une seule fois) :\n${url}\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez cet email.`,

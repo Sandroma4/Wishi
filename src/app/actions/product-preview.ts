@@ -26,7 +26,7 @@ export async function previewProduct(wishlistId: string, url: string) {
       if (time < Date.now() - 60000) attempts.delete(key);
   attempts.set(user, Date.now());
   try {
-    const page = await readPublicResource(url, 1024 * 1024, "html");
+    const page = await readPublicResource(url, 4 * 1024 * 1024, "html");
     const data = parseProduct(page.bytes.toString("utf8"), page.url);
     let photo = "";
     if (data.image)
@@ -44,7 +44,12 @@ export async function previewProduct(wishlistId: string, url: string) {
         if (bytes.length <= 700000) photo = bytes.toString("base64");
       } catch {}
     return { title: data.title, price: data.price, photo };
-  } catch {
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production")
+      console.warn(
+        "Product preview failed:",
+        error instanceof Error ? error.message : "unknown",
+      );
     return { error: true };
   }
 }

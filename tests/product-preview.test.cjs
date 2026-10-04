@@ -10,6 +10,20 @@ const {
   parseProduct,
   readPublicResource,
 } = require("../src/lib/product-preview.ts");
+test("Amazon product fields prefer the actual product and preserve EUR prices", () => {
+  const html = `<title>Merchant title</title><span class="a-offscreen">999,00 €</span>
+    <span id="productTitle">Caf&eacute; &amp; cadeau</span>
+    <span id="apex-pricetopay-accessibility-label">1 249,90 €</span>
+    <img id="landingImage" data-a-dynamic-image="{&quot;https://example.com/small.jpg&quot;:[100,100],&quot;https://example.com/large.jpg&quot;:[800,600]}">`;
+  assert.deepEqual(parseProduct(html, "https://www.amazon.fr/dp/example"), {
+    title: "Café & cadeau", price: "1249.90", image: "https://example.com/large.jpg",
+  });
+  assert.equal(parseProduct(html, "https://amazon.fr.example.com").price, "");
+  assert.equal(parseProduct(html.replace("1 249,90 €", "$1,249.90"), "https://www.amazon.com").price, "");
+});
+test("Amazon challenge pages do not become proposed gifts", () => {
+  assert.deepEqual(parseProduct('<title>Amazon CAPTCHA</title><input id="captchacharacters">', "https://www.amazon.fr"), { title: "", price: "", image: "" });
+});
 test("product previews reject internal destinations and unsafe schemes", async () => {
   for (const value of [
     "127.0.0.1",

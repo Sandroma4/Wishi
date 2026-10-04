@@ -1,10 +1,11 @@
 "use client";
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { Input } from "@/components/ui/Input";
 export function ListBrowser({
   lists,
+  filters,
 }: {
+  filters?: ReactNode;
   lists: {
     id: string;
     name: string;
@@ -12,6 +13,7 @@ export function ListBrowser({
     card: ReactNode;
   }[];
 }) {
+  const searchId = useId();
   const t = useTranslations("listNavigation");
   const [query, setQuery] = useState("");
   const normalize = (text: string) =>
@@ -26,14 +28,35 @@ export function ListBrowser({
   );
   return (
     <div className="stack">
-      <Input
-        type="search"
-        label={t("search")}
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-        maxLength={120}
-      />
-      <p role="status">
+      <div className="list-toolbar">
+        {filters}
+        <div className="list-search">
+          <label htmlFor={searchId}>{t("search")}</label>
+          <div className="list-search-field">
+            <svg
+              aria-hidden="true"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+            >
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="m16 16 4 4" />
+            </svg>
+            <input
+              id={searchId}
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              maxLength={120}
+            />
+          </div>
+        </div>
+      </div>
+      <p className="result-count" role="status">
         {t("shown", { count: visible.length, total: lists.length })}
       </p>
       <div className="wishlist-browser-grid">

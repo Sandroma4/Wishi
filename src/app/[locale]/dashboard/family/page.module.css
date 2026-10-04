@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 3vh, 2rem);
+  gap: 1.25rem;
 }
 
 .header {
@@ -11,15 +11,15 @@
 }
 
 .title {
-  font-size: clamp(1.25rem, 2vw, 1.5rem);
-  font-weight: 600;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 700;
   letter-spacing: -0.025em;
 }
 
 /* Fluid responsive grid for Family Page */
 .grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  grid-template-columns: 1fr;
   gap: clamp(1rem, 2vw, 2rem);
   align-items: start; /* Don't stretch the side content vertically */
 }
@@ -45,7 +45,7 @@
 .sideContent {
   display: flex;
   flex-direction: column;
-  position: sticky;
+  position: static;
   top: clamp(1rem, 2vh, 1.5rem);
 }
 
@@ -118,10 +118,16 @@
 }
 
 .memberRole {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--muted-foreground);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  display: inline-flex;
+  padding: 0.2rem 0.5rem;
+  margin-top: 0.25rem;
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--foreground);
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .emptyContent {
@@ -133,4 +139,85 @@
 
 .memberItem > div:last-child {
   min-width: 0;
+}
+
+.familyCard :global(.form-options) {
+  margin-top: 1rem;
+}
+
+.adminRole {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+.header {
+  position: relative;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.createFamily {
+  flex-shrink: 0;
+}
+.createFamily > summary,
+.inviteTrigger,
+.manageTrigger {
+  list-style: none;
+  cursor: pointer;
+}
+.createFamily > summary::-webkit-details-marker,
+.inviteTrigger::-webkit-details-marker,
+.manageTrigger::-webkit-details-marker {
+  display: none;
+}
+.createFamily > summary {
+  gap: 0.75rem;
+}
+.createFamily > summary::after,
+.manageTrigger::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+.createFamily[open] > summary::after,
+details[open] > .manageTrigger::after {
+  transform: rotate(225deg);
+}
+.createPanel {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  width: min(440px, 100%);
+  z-index: 4;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  max-height: 65dvh;
+  overflow-y: auto;
+}
+.inviteTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.inviteTrigger::before {
+  content: "+";
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.manageTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.manageTrigger:hover {
+  color: var(--brand-foreground);
+}
+.createFamily > summary:focus-visible,
+.inviteTrigger:focus-visible,
+.manageTrigger:focus-visible {
+  outline: 2px solid var(--brand-foreground);
+  outline-offset: 3px;
 }

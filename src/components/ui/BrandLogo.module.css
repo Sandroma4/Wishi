@@ -1,0 +1,11 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--brand-foreground);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.logo svg {
+  flex-shrink: 0;
+}

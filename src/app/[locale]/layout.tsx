@@ -6,7 +6,8 @@ import { routing } from "@/i18n/routing";
 import "@/app/globals.css";
 
 export const metadata = {
-  title: "Wishi - Family Wishlist",
+  title: "Cadéoly — Listes de cadeaux",
+  icons: { icon: "/cadeoly-icon.svg" },
   description: "Share wishlists with your family members.",
 };
 

@@ -45,16 +45,49 @@ export function GiftBrowser({
   );
   const { totals, unpriced } = giftTotals(visible);
   return (
-    <div className="stack">
+    <div className="stack gift-browser">
+      <div className="gift-summary">
+        <p>
+          {t("total")}:{" "}
+          {Object.entries(totals)
+            .map(([currency, cents]) =>
+              new Intl.NumberFormat(locale, {
+                style: "currency",
+                currency,
+              }).format(cents / 100),
+            )
+            .join(" + ") || "—"}
+        </p>
+        {unpriced > 0 && <p>{t("unpriced", { count: unpriced })}</p>}
+        {mixedCurrencies && <p>{t("currencies")}</p>}
+      </div>
+
       <div className="gift-filters" role="search" aria-label={t("title")}>
-        <Input
-          id={id + "-search"}
-          label={t("search")}
-          type="search"
-          value={filters.query}
-          onChange={(e) => change("query", e.target.value)}
-          maxLength={120}
-        />
+        <div className="list-search gift-search">
+          <label htmlFor={id + "-search"}>{t("search")}</label>
+          <div className="list-search-field">
+            <svg
+              aria-hidden="true"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+            >
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="m16 16 4 4" />
+            </svg>
+            <input
+              id={id + "-search"}
+              type="search"
+              value={filters.query}
+              onChange={(e) => change("query", e.target.value)}
+              maxLength={120}
+            />
+          </div>
+        </div>
         <div className="stack">
           <label htmlFor={id + "-sort"}>{t("sort")}</label>
           <select
@@ -72,7 +105,7 @@ export function GiftBrowser({
           </select>
         </div>
       </div>
-      <details className="form-options">
+      <details className="form-options list-detail-options">
         <summary>
           {flow("moreFilters")}{" "}
           {(filters.maxPrice ||
@@ -161,21 +194,6 @@ export function GiftBrowser({
         <p role="status">
           {t("shown", { count: visible.length, total: gifts.length })}
         </p>
-      </div>
-      <div className="gift-summary">
-        <p>
-          {t("total")}:{" "}
-          {Object.entries(totals)
-            .map(([currency, cents]) =>
-              new Intl.NumberFormat(locale, {
-                style: "currency",
-                currency,
-              }).format(cents / 100),
-            )
-            .join(" + ") || "—"}
-        </p>
-        {unpriced > 0 && <p>{t("unpriced", { count: unpriced })}</p>}
-        {mixedCurrencies && <p>{t("currencies")}</p>}
       </div>
       {!visible.length && <p>{t("noResults")}</p>}
       <div className="gift-grid">

@@ -1,6 +1,6 @@
 {
   "home": {
-    "title": "Welcome to Wishi",
+    "title": "Welcome to Cadéoly",
     "description": "Create and share wishlists with your family members.",
     "getStarted": "Get Started",
     "orSignIn": "or Sign In"
@@ -9,7 +9,7 @@
     "signInTitle": "Welcome back",
     "signInDescription": "Enter your credentials to access your family space",
     "signUpTitle": "Create an account",
-    "signUpDescription": "Join Wishi to create and share family wishlists",
+    "signUpDescription": "Join Cadéoly to create and share family wishlists",
     "fullName": "Full Name",
     "email": "Email",
     "password": "Password",
@@ -37,16 +37,18 @@
     "noActivity": "Nothing to show right now.",
     "myProfile": "My Profile",
     "hello": "Hello {name} 👋",
-    "intro": "Here is what is happening on Wishi.",
+    "intro": "Here is what is happening on Cadéoly.",
     "createEvent": "Create an event",
     "invite": "Invite family members",
     "signOut": "Sign out",
     "myReservations": "Reserved",
     "navHome": "Home",
     "navFamily": "Family",
-    "navEvents": "Dates",
+    "navEvents": "Events",
     "navFeedback": "Report a problem",
-    "displaySettings": "Options"
+    "displaySettings": "Options",
+    "optionsLanguage": "Language",
+    "optionsAppearance": "Appearance"
   },
   "wishlist": {
     "createTitle": "Create a new Wishlist",
@@ -202,7 +204,7 @@
     "wrongEmail": "Sign in using the email address this invitation was sent to.",
     "invalidCredentials": "Incorrect email or password.",
     "invalidPhoto": "Choose a valid JPEG, PNG or WebP photo up to 5 MB.",
-    "emailUnavailable": "Email recovery is not available yet. Please contact the person who manages Wishi.",
+    "emailUnavailable": "Email recovery is not available yet. Please contact the person who manages Cadéoly.",
     "invalidResetLink": "This link has expired or has already been used.",
     "passwordMismatch": "Both passwords must match.",
     "alreadyMember": "This person already belongs to the family.",
@@ -218,12 +220,14 @@
   },
   "reservations": {
     "title": "My reserved gifts",
-    "intro": "Find the gifts you plan to give. These reservations stay hidden from recipients.",
+    "intro": "Find the gifts you plan to give.",
     "empty": "You have not reserved a gift yet.",
     "for": "For {name}",
     "unknown": "a loved one",
     "unavailable": "List unavailable",
-    "accessChanged": "Access to this list has changed. You can still cancel your reservation."
+    "accessChanged": "Access to this list has changed. You can still cancel your reservation.",
+    "privacy": "Your reservations stay hidden from the recipient.",
+    "explore": "Explore my family’s lists"
   },
   "recovery": {
     "title": "Forgot password",
@@ -326,7 +330,7 @@
     "pending": "Preparing…"
   },
   "onboarding": {
-    "title": "Getting started with Wishi",
+    "title": "Getting started with Cadéoly",
     "intro": "Create your first wishlist and connect with your family.",
     "family": "Create or join a family",
     "familyHelp": "Create your family here, or open an invitation link from a relative to join.",
@@ -362,7 +366,7 @@
   },
   "feedback": {
     "title": "Report a problem or suggest an idea",
-    "intro": "Describe the problem and the steps to reproduce it. Reports are saved for review by the Wishi operator; no automated email is sent.",
+    "intro": "Describe the problem and the steps to reproduce it. Reports are saved for review by the Cadéoly operator; no automated email is sent.",
     "category": "Feedback type",
     "BUG": "Problem",
     "IDEA": "Idea",
@@ -378,19 +382,30 @@
     "resolved": "Resolved"
   },
   "uiFlow": {
-    "chooseMode": "How would you like to add this gift?",
+    "chooseMode": "How would you like to add this wish?",
     "fromLink": "From a link",
     "manual": "Manually",
     "moreOptions": "More options",
     "moreFilters": "More filters",
     "filtersActive": "Filters active",
-    "reviewGift": "Review gift",
+    "reviewGift": "View summary",
     "preview": "Gift preview",
     "previewHelp": "Review the details, then save. You can still edit them.",
     "giftSaved": "Gift saved.",
     "listSaved": "Wishlist saved.",
     "checkField": "Check this field.",
-    "addAnother": "Add another gift"
+    "addAnother": "Add another gift",
+    "requiredName": "Gift name — required",
+    "optionalHelp": "Only the name is required. You can add other details later.",
+    "estimatedPrice": "Estimated price (€) — optional",
+    "priorityHelp": "Let your family know what you would enjoy most.",
+    "optionalDetails": "Optional details",
+    "addPhoto": "Add a photo — optional",
+    "addToList": "Add to my list",
+    "viewMyList": "View my list",
+    "discardDraft": "Discard this draft? Unsaved information will be lost.",
+    "linkModeHelp": "Paste a product link. We’ll try to retrieve its name, price and photo, depending on the store.",
+    "manualModeHelp": "Enter a name, then add any details you want."
   },
   "usageHelp": {
     "title": "Getting started: sharing and gifting",
@@ -403,27 +418,29 @@
     "publicTitle": "Public",
     "publicHelp": "Anyone can view this wishlist.",
     "groupTitle": "Group gift",
-    "groupHelp": "Set a price so friends can pledge a contribution. Wishi does not collect payments. Contributions stay hidden from the owner to preserve the surprise."
+    "groupHelp": "Set a price so friends can pledge a contribution. Cadéoly does not collect payments. Contributions stay hidden from the owner to preserve the surprise."
   },
   "dailyFlow": {
     "eventListsHelp": "Find the participants’ wishlists you have permission to view here.",
     "createEventList": "Create my wishlist for this event",
     "sharingTitle": "Share this wishlist",
-    "inviteFamily": "Invite friends to my family",
+    "inviteFamily": "Invite loved ones",
     "privateSharing": "To share this wishlist, change its visibility in the wishlist settings.",
     "noPastEvents": "Past events will appear here.",
     "emptyEvents": "Create an event to bring your friends’ wishlists together.",
     "familyFirst": "Create or join a family before preparing an event.",
     "createFamily": "Create or join a family",
     "emptyFamily": "Create a family, then invite friends. To join an existing family, ask its administrator for an invitation.",
-    "emptyGiftsOwner": "Use “Add a gift” to start, from a link or manually.",
-    "emptyGiftsVisitor": "The owner has not added any gifts yet. Check this wishlist again later."
+    "emptyGiftsOwner": "Add your first wish from a link or manually.",
+    "emptyGiftsVisitor": "The owner has not added any gifts yet. Check this wishlist again later.",
+    "firstWish": "Your list is waiting for its first wish"
   },
   "theme": {
     "label": "Theme",
     "light": "Light",
     "dark": "Dark",
-    "system": "Automatic"
+    "system": "Automatic",
+    "auto": "Auto"
   },
   "navigationLoading": {
     "label": "Loading page…"
@@ -440,6 +457,7 @@
     "share": "Sharing",
     "settings": "Wishlist settings",
     "emptyTrash": "No wishlists in the trash.",
-    "emptyArchive": "No archived wishlists."
+    "emptyArchive": "No archived wishlists.",
+    "parameters": "List settings"
   }
 }

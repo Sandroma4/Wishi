@@ -1,18 +1,8 @@
 "use client";
 import { useTranslations } from "next-intl";
-export function ListSectionNavigation({
-  editable,
-  owner,
-}: {
-  editable: boolean;
-  owner: boolean;
-}) {
+export function ListSectionNavigation({ editable }: { editable: boolean }) {
   const t = useTranslations("listNavigation");
-  const sections = [
-    "gifts",
-    ...(editable ? ["share", "settings"] : []),
-    ...(owner ? ["manage"] : []),
-  ];
+  const sections = ["gifts", ...(editable ? ["share"] : [])];
   return (
     <nav className="button-row list-sections" aria-label={t("sections")}>
       {sections.map((key) => (

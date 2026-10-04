@@ -10,7 +10,6 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
 import { Link } from "@/i18n/routing";
 import { getMyWishlists } from "@/app/actions/wishlist";
 import { getTranslations } from "next-intl/server";
@@ -33,7 +32,7 @@ export default async function WishlistsPage({
 
   const nav = await getTranslations("listNavigation");
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} wishlist-page`}>
       <div className={styles.header}>
         <h1>{t("myWishlists")}</h1>
         <Link className="primary-link" href="/dashboard/wishlists/create">
@@ -41,18 +40,19 @@ export default async function WishlistsPage({
         </Link>
       </div>
 
-      <WishlistHelp />
-      <nav className="button-row" aria-label={lifecycle("views")}>
-        {(["active", "archived", "trash"] as const).map((state) => (
-          <Link
-            key={state}
-            aria-current={view === state ? "page" : undefined}
-            href={`/dashboard/wishlists?view=${state}`}
-          >
-            {lifecycle(state + "Tab")}
-          </Link>
-        ))}
-      </nav>
+      {wishlists.length === 0 && (
+        <nav className="button-row" aria-label={lifecycle("views")}>
+          {(["active", "archived", "trash"] as const).map((state) => (
+            <Link
+              key={state}
+              aria-current={view === state ? "page" : undefined}
+              href={`/dashboard/wishlists?view=${state}`}
+            >
+              {lifecycle(state + "Tab")}
+            </Link>
+          ))}
+        </nav>
+      )}
       {view !== "active" && (
         <p>{lifecycle(view === "trash" ? "trashHelp" : "archiveHelp")}</p>
       )}
@@ -74,14 +74,27 @@ export default async function WishlistsPage({
                   : "/dashboard/wishlists"
               }
             >
-              <Button variant="secondary" className={styles.createBtn}>
+              <span>
                 {view === "active" ? tw("createFirst") : lifecycle("activeTab")}
-              </Button>
+              </span>
             </Link>
           </CardContent>
         </Card>
       ) : (
         <ListBrowser
+          filters={
+            <nav className="button-row" aria-label={lifecycle("views")}>
+              {(["active", "archived", "trash"] as const).map((state) => (
+                <Link
+                  key={state}
+                  aria-current={view === state ? "page" : undefined}
+                  href={`/dashboard/wishlists?view=${state}`}
+                >
+                  {lifecycle(state + "Tab")}
+                </Link>
+              ))}
+            </nav>
+          }
           lists={wishlists.map((list) => ({
             id: list.id,
             name: list.name,
@@ -119,7 +132,7 @@ export default async function WishlistsPage({
                   {view !== "trash" && (
                     <Link
                       href={`/dashboard/wishlists/${list.id}?from=${view}`}
-                      className="primary-link list-open"
+                      className="secondary-link"
                     >
                       {tw("viewList")}
                     </Link>
@@ -136,6 +149,7 @@ export default async function WishlistsPage({
           }))}
         />
       )}
+      <WishlistHelp />
     </div>
   );
 }

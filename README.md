@@ -1,4 +1,6 @@
-# Wishi
+# Cadéoly
+
+Anciennement Wishi. Les identifiants techniques existants sont conservés pour assurer la compatibilité.
 
 Application de listes de cadeaux familiales, disponible en français et en anglais.
 

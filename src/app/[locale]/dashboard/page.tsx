@@ -1,4 +1,5 @@
 import styles from "./page.module.css";
+import { OccasionIcon } from "@/components/ui/OccasionIcon";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getEvents } from "@/app/actions/event";
@@ -37,7 +38,7 @@ export default async function DashboardPage() {
         <p>{t("intro")}</p>
       </header>
       {(!familyCount || !lists.length) && (
-        <Card>
+        <Card className={styles.summaryCard}>
           <CardHeader>
             <CardTitle>{guide("title")}</CardTitle>
           </CardHeader>
@@ -61,70 +62,112 @@ export default async function DashboardPage() {
         </Card>
       )}
       <div className={styles.grid}>
-        <Card>
+        <Card className={styles.summaryCard}>
           <CardHeader>
             <CardTitle>{t("upcomingEvents")}</CardTitle>
           </CardHeader>
-          <CardContent>
-            {!events.length && <p>{t("noEvents")}</p>}
-            <ul className="stack">
-              {events.slice(0, 3).map((event) => (
-                <li key={event.id}>
-                  <Link href={`/dashboard/events/${event.id}`}>
-                    {event.name}
-                  </Link>
-                  <p>
-                    {new Intl.DateTimeFormat(locale, {
-                      dateStyle: "long",
-                      timeZone: "UTC",
-                    }).format(event.date)}{" "}
-                    · {event.family.name}
-                  </p>
-                </li>
-              ))}
-            </ul>
-            <Link href="/dashboard/events">{t("createEvent")}</Link>
+          <CardContent className={styles.cardBody}>
+            {!events.length ? (
+              <div className={styles.emptyContent}>
+                <span className={styles.emptyIcon}>
+                  <OccasionIcon kind="calendar" />
+                </span>
+                <p>{t("noEvents")}</p>
+              </div>
+            ) : (
+              <ul className={styles.entries}>
+                {events.slice(0, 3).map((event) => (
+                  <li key={event.id}>
+                    <Link href={`/dashboard/events/${event.id}`}>
+                      {event.name}
+                    </Link>
+                    <p>
+                      {new Intl.DateTimeFormat(locale, {
+                        dateStyle: "long",
+                        timeZone: "UTC",
+                      }).format(event.date)}{" "}
+                      · {event.family.name}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Link
+              className={`primary-link ${styles.cardAction}`}
+              href="/dashboard/events"
+            >
+              <span aria-hidden="true">+</span>
+              {t("createEvent")}
+            </Link>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={styles.summaryCard}>
           <CardHeader>
             <CardTitle>{t("myWishlists")}</CardTitle>
           </CardHeader>
-          <CardContent>
-            {!lists.length && <p>{w("empty")}</p>}
-            <ul className="stack">
-              {lists.slice(0, 3).map((list) => (
-                <li key={list.id}>
-                  <Link href={"/dashboard/wishlists/" + list.id}>
-                    {list.name}
-                  </Link>
-                  <p>{w("itemsCount", { count: list._count.items })}</p>
-                </li>
-              ))}
-            </ul>
-            <Link href="/dashboard/wishlists/create">{t("newWishlist")}</Link>
+          <CardContent className={styles.cardBody}>
+            {!lists.length ? (
+              <div className={styles.emptyContent}>
+                <span className={styles.emptyIcon}>
+                  <OccasionIcon kind="gift" />
+                </span>
+                <p>{w("empty")}</p>
+              </div>
+            ) : (
+              <ul className={styles.entries}>
+                {lists.slice(0, 3).map((list) => (
+                  <li key={list.id}>
+                    <Link href={"/dashboard/wishlists/" + list.id}>
+                      {list.name}
+                    </Link>
+                    <p>{w("itemsCount", { count: list._count.items })}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Link
+              className={`primary-link ${styles.cardAction}`}
+              href="/dashboard/wishlists/create"
+            >
+              <span aria-hidden="true">+</span>
+              {t("newWishlist")}
+            </Link>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={styles.summaryCard}>
           <CardHeader>
             <CardTitle>{t("familyActivity")}</CardTitle>
           </CardHeader>
-          <CardContent>
-            {!familyLists.length && <p>{t("noActivity")}</p>}
-            <ul className="stack">
-              {familyLists.map((list) => (
-                <li key={list.id}>
-                  <Link href={"/dashboard/wishlists/" + list.id}>
-                    {list.name}
-                  </Link>
-                  <p>
-                    {w("byOwner", { name: list.owner.name || c("unknown") })} ·{" "}
-                    {w("itemsCount", { count: list._count.items })}
-                  </p>
-                </li>
-              ))}
-            </ul>
-            <Link href="/dashboard/family">{t("invite")}</Link>
+          <CardContent className={styles.cardBody}>
+            {!familyLists.length ? (
+              <div className={styles.emptyContent}>
+                <span className={styles.emptyIcon}>
+                  <OccasionIcon kind="people" />
+                </span>
+                <p>{t("noActivity")}</p>
+              </div>
+            ) : (
+              <ul className={styles.entries}>
+                {familyLists.map((list) => (
+                  <li key={list.id}>
+                    <Link href={"/dashboard/wishlists/" + list.id}>
+                      {list.name}
+                    </Link>
+                    <p>
+                      {w("byOwner", { name: list.owner.name || c("unknown") })}{" "}
+                      · {w("itemsCount", { count: list._count.items })}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Link
+              className={`primary-link ${styles.cardAction}`}
+              href="/dashboard/family"
+            >
+              <span aria-hidden="true">+</span>
+              {t("invite")}
+            </Link>
           </CardContent>
         </Card>
       </div>

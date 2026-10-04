@@ -29,6 +29,12 @@ export default async function FamilyPage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>{t("title")}</h1>
+        <details className={styles.createFamily}>
+          <summary className="primary-link">{t("createFamily")}</summary>
+          <div className={styles.createPanel}>
+            <CreateFamilyForm showTitle={false} />
+          </div>
+        </details>
       </header>
 
       <div className={styles.grid}>
@@ -41,9 +47,6 @@ export default async function FamilyPage() {
                 </div>
                 <p>{t("noFamily")}</p>
                 <p>{flow("emptyFamily")}</p>
-                <a className="primary-link" href="#create-family-form">
-                  {t("createFamily")}
-                </a>
               </CardContent>
             </Card>
           ) : (
@@ -72,13 +75,15 @@ export default async function FamilyPage() {
                             <p className={styles.memberName}>
                               {member.user.name}
                             </p>
-                            <p className={styles.memberRole}>
+                            <span
+                              className={`${styles.memberRole} ${member.role === "ADMIN" ? styles.adminRole : ""}`}
+                            >
                               {t(
                                 member.role === "ADMIN"
                                   ? "roleAdmin"
                                   : "roleMember",
                               )}
-                            </p>
+                            </span>
                           </div>
                         </li>
                       ))}
@@ -90,8 +95,12 @@ export default async function FamilyPage() {
                       member.userId === session?.user?.id &&
                       member.role === "ADMIN",
                   ) && (
-                    <details className="form-options">
-                      <summary>{t("invite")}</summary>
+                    <details className="form-options invitation-panel">
+                      <summary
+                        className={`creation-trigger ${styles.inviteTrigger}`}
+                      >
+                        {t("invite")}
+                      </summary>
                       <div className="stack">
                         <InviteMemberForm familyId={family.id} />
                         <PendingInvitations familyId={family.id} />
@@ -102,7 +111,9 @@ export default async function FamilyPage() {
                   <FamilyWishlists familyId={family.id} />
                   {session?.user?.id && (
                     <details className="form-options">
-                      <summary>{management("title")}</summary>
+                      <summary className={styles.manageTrigger}>
+                        {management("title")}
+                      </summary>
                       <MemberManagement
                         familyId={family.id}
                         ownerId={family.ownerId}
@@ -115,16 +126,6 @@ export default async function FamilyPage() {
               </Card>
             ))
           )}
-        </div>
-
-        <div className={styles.sideContent}>
-          <details
-            className="form-options creation-panel"
-            open={!families.length}
-          >
-            <summary>{t("createFamily")}</summary>
-            <CreateFamilyForm showTitle={false} />
-          </details>
         </div>
       </div>
     </div>

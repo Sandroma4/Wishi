@@ -1,6 +1,6 @@
 {
   "home": {
-    "title": "Bienvenue sur Wishi",
+    "title": "Bienvenue sur Cadéoly",
     "description": "Créez et partagez des listes de cadeaux avec votre famille.",
     "getStarted": "Commencer",
     "orSignIn": "ou Se connecter"
@@ -9,7 +9,7 @@
     "signInTitle": "Bon retour",
     "signInDescription": "Entrez vos identifiants pour accéder à votre espace familial",
     "signUpTitle": "Créer un compte",
-    "signUpDescription": "Rejoignez Wishi pour créer et partager vos listes de cadeaux",
+    "signUpDescription": "Rejoignez Cadéoly pour créer et partager vos listes de cadeaux",
     "fullName": "Nom complet",
     "email": "Email",
     "password": "Mot de passe",
@@ -37,16 +37,18 @@
     "noActivity": "Rien à afficher pour le moment.",
     "myProfile": "Mon Profil",
     "hello": "Bonjour {name} 👋",
-    "intro": "Voici ce qui se passe sur Wishi.",
+    "intro": "Voici ce qui se passe sur Cadéoly.",
     "createEvent": "Créer un événement",
     "invite": "Inviter des proches",
     "signOut": "Se déconnecter",
     "myReservations": "Réservés",
     "navHome": "Accueil",
     "navFamily": "Famille",
-    "navEvents": "Dates",
+    "navEvents": "Événements",
     "navFeedback": "Signaler un problème",
-    "displaySettings": "Options"
+    "displaySettings": "Options",
+    "optionsLanguage": "Langue",
+    "optionsAppearance": "Apparence"
   },
   "wishlist": {
     "createTitle": "Créer une liste d'envies",
@@ -202,7 +204,7 @@
     "wrongEmail": "Connectez-vous avec l’adresse email destinataire de cette invitation.",
     "invalidCredentials": "Email ou mot de passe incorrect.",
     "invalidPhoto": "Choisissez une photo JPEG, PNG ou WebP valide de 5 Mo maximum.",
-    "emailUnavailable": "La récupération par email n’est pas encore disponible. Veuillez contacter la personne qui gère Wishi.",
+    "emailUnavailable": "La récupération par email n’est pas encore disponible. Veuillez contacter la personne qui gère Cadéoly.",
     "invalidResetLink": "Ce lien a expiré ou a déjà été utilisé.",
     "passwordMismatch": "Les deux mots de passe doivent être identiques.",
     "alreadyMember": "Cette personne fait déjà partie de la famille.",
@@ -218,12 +220,14 @@
   },
   "reservations": {
     "title": "Mes cadeaux réservés",
-    "intro": "Retrouvez les cadeaux que vous avez prévu d’offrir. Ces réservations restent cachées aux destinataires.",
+    "intro": "Retrouve les cadeaux que tu as prévu d’offrir.",
     "empty": "Vous n’avez pas encore réservé de cadeau.",
     "for": "Pour {name}",
     "unknown": "un proche",
     "unavailable": "Liste indisponible",
-    "accessChanged": "L’accès à cette liste a changé. Vous pouvez toujours annuler votre réservation."
+    "accessChanged": "L’accès à cette liste a changé. Vous pouvez toujours annuler votre réservation.",
+    "privacy": "Tes réservations restent une surprise pour le destinataire.",
+    "explore": "Explorer les listes de mes proches"
   },
   "recovery": {
     "title": "Mot de passe oublié",
@@ -326,7 +330,7 @@
     "pending": "Préparation…"
   },
   "onboarding": {
-    "title": "Vos premiers pas sur Wishi",
+    "title": "Vos premiers pas sur Cadéoly",
     "intro": "Préparez votre première liste et retrouvez vos proches.",
     "family": "Créer ou rejoindre une famille",
     "familyHelp": "Créez votre famille ici, ou ouvrez le lien envoyé par un proche pour la rejoindre.",
@@ -362,7 +366,7 @@
   },
   "feedback": {
     "title": "Signaler un problème ou proposer une idée",
-    "intro": "Décrivez ce qui vous gêne et les étapes pour reproduire le problème. Les signalements sont conservés pour consultation par le responsable de Wishi ; aucun email automatique n’est envoyé.",
+    "intro": "Décrivez ce qui vous gêne et les étapes pour reproduire le problème. Les signalements sont conservés pour consultation par le responsable de Cadéoly ; aucun email automatique n’est envoyé.",
     "category": "Type de retour",
     "BUG": "Problème",
     "IDEA": "Idée",
@@ -378,19 +382,30 @@
     "resolved": "Traité"
   },
   "uiFlow": {
-    "chooseMode": "Comment souhaites-tu ajouter ce cadeau ?",
+    "chooseMode": "Comment veux-tu ajouter cette envie ?",
     "fromLink": "Depuis un lien",
     "manual": "Manuellement",
     "moreOptions": "Plus d’options",
     "moreFilters": "Plus de filtres",
     "filtersActive": "Filtres actifs",
-    "reviewGift": "Vérifier le cadeau",
+    "reviewGift": "Voir le récapitulatif",
     "preview": "Aperçu du cadeau",
     "previewHelp": "Vérifie les informations, puis enregistre. Tu peux encore les modifier.",
     "giftSaved": "Cadeau enregistré.",
     "listSaved": "Liste enregistrée.",
     "checkField": "Vérifie ce champ.",
-    "addAnother": "Ajouter un autre cadeau"
+    "addAnother": "Ajouter un autre cadeau",
+    "requiredName": "Nom du cadeau — obligatoire",
+    "optionalHelp": "Seul le nom est obligatoire. Tu peux compléter les autres informations plus tard.",
+    "estimatedPrice": "Prix estimé (€) — facultatif",
+    "priorityHelp": "Indique à tes proches ce qui te ferait le plus plaisir.",
+    "optionalDetails": "Détails facultatifs",
+    "addPhoto": "Ajouter une photo — facultatif",
+    "addToList": "Ajouter à ma liste",
+    "viewMyList": "Voir ma liste",
+    "discardDraft": "Abandonner cette saisie ? Les informations non enregistrées seront perdues.",
+    "linkModeHelp": "Colle un lien produit. Nous essaierons de récupérer son nom, son prix et sa photo, selon le site marchand.",
+    "manualModeHelp": "Renseigne un nom, puis ajoute les détails que tu souhaites."
   },
   "usageHelp": {
     "title": "Premiers pas : partager et offrir",
@@ -403,27 +418,29 @@
     "publicTitle": "Publique",
     "publicHelp": "La liste peut être consultée par tout le monde.",
     "groupTitle": "Cadeau collectif",
-    "groupHelp": "Indique un prix pour permettre aux proches de proposer une participation. Wishi ne collecte aucun paiement. Les participations restent cachées au propriétaire pour préserver la surprise."
+    "groupHelp": "Indique un prix pour permettre aux proches de proposer une participation. Cadéoly ne collecte aucun paiement. Les participations restent cachées au propriétaire pour préserver la surprise."
   },
   "dailyFlow": {
     "eventListsHelp": "Retrouve ici les listes des participants auxquelles tu as accès.",
     "createEventList": "Créer ma liste pour cet événement",
     "sharingTitle": "Partager cette liste",
-    "inviteFamily": "Inviter des proches dans ma famille",
+    "inviteFamily": "Inviter des proches",
     "privateSharing": "Pour partager cette liste, modifie sa visibilité dans les options de la liste.",
     "noPastEvents": "Tes événements passés apparaîtront ici.",
     "emptyEvents": "Crée un événement pour réunir les listes de tes proches.",
     "familyFirst": "Crée ou rejoins une famille avant de préparer un événement.",
     "createFamily": "Créer ou rejoindre une famille",
     "emptyFamily": "Crée une famille, puis invite tes proches. Pour rejoindre une famille existante, demande une invitation à son administrateur.",
-    "emptyGiftsOwner": "Utilise « Ajouter un cadeau » pour commencer, depuis un lien ou manuellement.",
-    "emptyGiftsVisitor": "Le propriétaire n’a pas encore ajouté de cadeaux. Reviens consulter cette liste plus tard."
+    "emptyGiftsOwner": "Ajoute ta première envie depuis un lien ou manuellement.",
+    "emptyGiftsVisitor": "Le propriétaire n’a pas encore ajouté de cadeaux. Reviens consulter cette liste plus tard.",
+    "firstWish": "Ta liste attend sa première envie"
   },
   "theme": {
     "label": "Thème",
     "light": "Clair",
     "dark": "Sombre",
-    "system": "Automatique"
+    "system": "Automatique",
+    "auto": "Auto"
   },
   "navigationLoading": {
     "label": "Chargement de la page…"
@@ -440,6 +457,7 @@
     "share": "Partage",
     "settings": "Réglages de la liste",
     "emptyTrash": "Aucune liste dans la corbeille.",
-    "emptyArchive": "Aucune liste archivée."
+    "emptyArchive": "Aucune liste archivée.",
+    "parameters": "Paramètres de la liste"
   }
 }
