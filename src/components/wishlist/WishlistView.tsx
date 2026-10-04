@@ -5,6 +5,7 @@ import { AddItemForm } from "./AddItemForm";
 import { ReserveButton } from "./ReserveButton";
 import { GiftDetails } from "./GiftDetails";
 import { GiftBrowser } from "./GiftBrowser";
+import { ContributionForm } from "./ContributionForm";
 import {
   Card,
   CardHeader,
@@ -36,6 +37,23 @@ export async function WishlistView({
         )}
       </header>
       {wishlist.description && <p>{wishlist.description}</p>}
+      {wishlist.occasion && (
+        <p>
+          {t("occasion")}: {wishlist.occasion}
+        </p>
+      )}
+      {wishlist.neededBy && (
+        <p>
+          {t("neededBy")}:{" "}
+          {new Intl.DateTimeFormat(locale, {
+            dateStyle: "long",
+            timeZone: "UTC",
+          }).format(new Date(wishlist.neededBy + "T00:00:00Z"))}
+        </p>
+      )}
+      {wishlist.preferences && (
+        <p style={{ whiteSpace: "pre-wrap" }}>{wishlist.preferences}</p>
+      )}
       {wishlist.isOwner && (
         <>
           <p>{t("surprise")}</p>
@@ -52,6 +70,7 @@ export async function WishlistView({
               <Card key={item.id}>
                 <CardHeader>
                   <CardTitle>{item.title}</CardTitle>
+                  {item.isGroupGift && <p>{t("groupGift")}</p>}
                   <p>
                     {item.priceCents !== null
                       ? new Intl.NumberFormat(locale, {
@@ -87,6 +106,15 @@ export async function WishlistView({
                     wishlist.canEdit && (
                       <AddItemForm wishlistId={wishlist.id} item={item} />
                     )
+                  ) : loggedIn && item.isGroupGift ? (
+                    <ContributionForm
+                      key={item.myContributionCents}
+                      itemId={item.id}
+                      mine={item.myContributionCents}
+                      total={item.contributedCents}
+                      target={item.priceCents || 0}
+                      token={token}
+                    />
                   ) : loggedIn ? (
                     <ReserveButton
                       itemId={item.id}

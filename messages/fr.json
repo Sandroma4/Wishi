@@ -44,7 +44,8 @@
     "myReservations": "Réservés",
     "navHome": "Accueil",
     "navFamily": "Famille",
-    "navEvents": "Dates"
+    "navEvents": "Dates",
+    "navFeedback": "Signaler un problème"
   },
   "wishlist": {
     "createTitle": "Créer une liste d'envies",
@@ -100,7 +101,14 @@
     "photo": "Photo du cadeau",
     "photoHint": "JPEG, PNG ou WebP, 5 Mo maximum.",
     "removePhoto": "Supprimer la photo actuelle",
-    "publicShareHelp": "Cette liste est publique. Un compte est requis pour réserver. Vos réservations restent cachées au propriétaire."
+    "publicShareHelp": "Cette liste est publique. Un compte est requis pour réserver. Vos réservations restent cachées au propriétaire.",
+    "allowDuplicate": "Ajouter ce cadeau malgré le doublon",
+    "groupGift": "Cadeau groupé",
+    "groupHint": "À choisir lors de la création, avec un prix en euros. Les proches peuvent promettre une participation ; aucun paiement n’est effectué.",
+    "occasion": "Occasion",
+    "neededBy": "Date souhaitée",
+    "preferences": "Préférences et idées générales",
+    "preferencesHint": "Ces informations seront visibles par les personnes qui peuvent consulter votre liste."
   },
   "family": {
     "title": "Espace Famille",
@@ -201,7 +209,10 @@
     "wrongPassword": "Le mot de passe actuel est incorrect.",
     "samePassword": "Choisissez un mot de passe différent du précédent.",
     "transferFirst": "Transmettez la responsabilité de la famille avant de quitter ou retirer son propriétaire.",
-    "lastAdmin": "La famille doit conserver au moins un administrateur."
+    "lastAdmin": "La famille doit conserver au moins un administrateur.",
+    "duplicateGift": "Un cadeau avec ce lien existe déjà dans cette liste.",
+    "groupPriceRequired": "Un cadeau groupé doit avoir un prix en euros supérieur à zéro.",
+    "groupBudgetExceeded": "Ce montant dépasse le budget restant. Actualisez la liste et choisissez un montant inférieur."
   },
   "reservations": {
     "title": "Mes cadeaux réservés",
@@ -332,5 +343,36 @@
     "review": "Informations proposées : vérifiez le nom, le prix et la photo avant de sauvegarder. Le prix peut changer.",
     "photoAlt": "Photo proposée pour le cadeau",
     "remove": "Retirer la photo proposée"
+  },
+  "contributions": {
+    "title": "Mes participations aux cadeaux groupés",
+    "open": "Voir la liste",
+    "help": "Intention de participation, sans paiement. Organisez l’achat et le règlement entre vous. Les participations restent cachées au propriétaire.",
+    "progress": "{total} promis sur {target}",
+    "mine": "Ma participation : {amount}",
+    "amount": "Ma participation en euros",
+    "join": "Participer",
+    "update": "Modifier ma participation",
+    "cancel": "Annuler ma participation",
+    "saved": "Participation enregistrée.",
+    "cancelled": "Participation annulée.",
+    "complete": "Le budget est entièrement couvert par les participations."
+  },
+  "feedback": {
+    "title": "Signaler un problème ou proposer une idée",
+    "intro": "Décrivez ce qui vous gêne et les étapes pour reproduire le problème. Les signalements sont conservés pour consultation par le responsable de Wishi ; aucun email automatique n’est envoyé.",
+    "category": "Type de retour",
+    "BUG": "Problème",
+    "IDEA": "Idée",
+    "OTHER": "Autre",
+    "message": "Votre message",
+    "help": "Entre 10 et 2 000 caractères. Ne partagez aucun mot de passe, clé secrète ou lien privé.",
+    "send": "Enregistrer mon retour",
+    "sending": "Enregistrement…",
+    "saved": "Votre retour a été enregistré.",
+    "history": "Mes derniers retours",
+    "empty": "Aucun retour pour le moment.",
+    "open": "À examiner",
+    "resolved": "Traité"
   }
 }

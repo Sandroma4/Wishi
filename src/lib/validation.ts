@@ -22,6 +22,22 @@ export const registrationSchema = credentialsSchema.extend({
   password: passwordSchema,
 });
 export const wishlistSchema = z.object({
+  occasion: z
+    .string()
+    .trim()
+    .max(120)
+    .optional()
+    .transform((v) => v || null),
+  neededBy: z
+    .union([z.literal(""), z.iso.date()])
+    .optional()
+    .transform((v) => v || null),
+  preferences: z
+    .string()
+    .trim()
+    .max(2000)
+    .optional()
+    .transform((v) => v || null),
   name: text,
   description,
   visibility: z.enum(["PRIVATE", "FAMILY", "LINK", "PUBLIC"]),
@@ -32,6 +48,10 @@ export const wishlistSchema = z.object({
     .transform((value) => value || null),
 });
 export const itemSchema = z.object({
+  isGroupGift: z
+    .enum(["on", "off"])
+    .optional()
+    .transform((v) => v === "on"),
   size: z
     .string()
     .trim()

@@ -62,6 +62,9 @@ export default async function WishlistDetailsPage({
               key={JSON.stringify([
                 wishlist.name,
                 wishlist.description,
+                wishlist.occasion,
+                wishlist.neededBy,
+                wishlist.preferences,
                 wishlist.visibility,
                 wishlist.eventId,
               ])}

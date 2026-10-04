@@ -10,7 +10,7 @@
     "test": "node --test tests/*.test.cjs",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy",
+    "db:migrate": "node scripts/migrate.cjs",
     "db:seed": "node scripts/seed.cjs",
     "backup:create": "node --env-file-if-exists=.env scripts/backup.cjs create",
     "backup:verify": "node --env-file-if-exists=.env scripts/backup.cjs verify",
@@ -20,7 +20,8 @@
     "launch:check": "node --env-file-if-exists=.env scripts/launch-check.cjs",
     "format": "prettier --write src messages tests scripts prisma/seed.ts next.config.ts eslint.config.mjs --ignore-path .gitignore",
     "backup:package": "node scripts/package-backup.cjs",
-    "email:status": "node --env-file-if-exists=.env scripts/email-status.cjs"
+    "email:status": "node --env-file-if-exists=.env scripts/email-status.cjs",
+    "feedback:list": "node --env-file-if-exists=.env scripts/feedback.cjs list"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",

@@ -27,6 +27,8 @@ model User {
   familyMembers FamilyMember[]
   wishlists     Wishlist[]
   reservations  Reservation[]
+  contributions Contribution[]
+  feedback      Feedback[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,6 +138,9 @@ model Invitation {
 }
 
 model Wishlist {
+  occasion    String?
+  neededBy    String?
+  preferences String?
   archivedAt  DateTime?
   deletedAt   DateTime?
   id          String    @id @default(cuid())
@@ -161,14 +166,16 @@ model Wishlist {
 }
 
 model WishlistItem {
-  deletedAt   DateTime?
-  id          String    @id @default(cuid())
-  title       String
-  description String?
-  url         String?
-  priceCents  Int?
-  currency    String?   @default("EUR")
-  image       String?
+  isGroupGift   Boolean        @default(false)
+  contributions Contribution[]
+  deletedAt     DateTime?
+  id            String         @id @default(cuid())
+  title         String
+  description   String?
+  url           String?
+  priceCents    Int?
+  currency      String?        @default("EUR")
+  image         String?
 
   categoryId String?
   size       String?
@@ -207,6 +214,33 @@ model Reservation {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+}
+
+model Contribution {
+  id              String       @id @default(cuid())
+  itemId          String
+  item            WishlistItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amountCents     Int
+  accessTokenHash String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@unique([itemId, userId])
+  @@index([userId])
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category  String
+  message   String
+  status    String   @default("OPEN")
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
 }
 
 model Category {

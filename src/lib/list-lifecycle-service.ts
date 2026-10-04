@@ -60,6 +60,7 @@ export async function duplicateList(
         size: item.size,
         color: item.color,
         model: item.model,
+        isGroupGift: item.isGroupGift,
         image,
       });
     }
@@ -75,6 +76,9 @@ export async function duplicateList(
         data: {
           name: parsed.data,
           description: source.description,
+          occasion: source.occasion,
+          neededBy: source.neededBy,
+          preferences: source.preferences,
           ownerId,
           visibility: "PRIVATE",
           items: { create: items },

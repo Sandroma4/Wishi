@@ -22,6 +22,7 @@ type Gift = {
   size: string | null;
   color: string | null;
   model: string | null;
+  isGroupGift?: boolean;
 };
 export function AddItemForm({
   wishlistId,
@@ -146,6 +147,12 @@ export function AddItemForm({
         >
           <h3>{t(item ? "editGift" : "addItem")}</h3>
           {error && <p role="alert">{error}</p>}
+          {error === errors("duplicateGift") && (
+            <label>
+              <input type="checkbox" name="allowDuplicate" />{" "}
+              {t("allowDuplicate")}
+            </label>
+          )}
           <Input
             id={prefix + "-url"}
             name="url"
@@ -191,6 +198,14 @@ export function AddItemForm({
               item?.priceCents == null ? "" : (item.priceCents / 100).toFixed(2)
             }
           />
+          {!item ? (
+            <label>
+              <input type="checkbox" name="isGroupGift" /> {t("groupGift")}
+            </label>
+          ) : (
+            item.isGroupGift && <p>{t("groupGift")}</p>
+          )}
+          {!item && <p>{t("groupHint")}</p>}
           {(["size", "color", "model"] as const).map((key) => (
             <Input
               key={key}

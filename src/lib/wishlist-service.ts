@@ -52,6 +52,9 @@ export async function readWishlist(
       id: true,
       name: true,
       description: true,
+      occasion: true,
+      neededBy: true,
+      preferences: true,
       ownerId: true,
       visibility: true,
       eventId: true,
@@ -73,6 +76,22 @@ export async function readWishlist(
           size: true,
           color: true,
           model: true,
+          isGroupGift: true,
+          ...(!isOwner
+            ? {
+                contributions: {
+                  where:
+                    list.visibility === "LINK"
+                      ? {
+                          accessTokenHash: list.shareToken
+                            ? hashShareToken(list.shareToken)
+                            : "invalid",
+                        }
+                      : {},
+                  select: { userId: true, amountCents: true },
+                },
+              }
+            : {}),
           ...(!isOwner ? { reservations: { select: { userId: true } } } : {}),
         },
       },
@@ -85,12 +104,26 @@ export async function readWishlist(
     canEdit: isOwner && !list.archivedAt,
     items: result.items.map((item) => {
       // Never send reservation records or identities to the presentation layer.
-      const { reservations, ...gift } = item;
+      const { reservations, contributions, ...gift } = item;
+      const contributedCents = !isOwner
+        ? contributions?.reduce((sum, c) => sum + c.amountCents, 0) || 0
+        : 0;
       return {
         ...gift,
-        isReserved: !isOwner && Boolean(reservations?.length),
+        contributedCents,
+        myContributionCents: !isOwner
+          ? contributions?.find((c) => c.userId === userId)?.amountCents || 0
+          : 0,
+        isReserved:
+          !isOwner &&
+          (item.isGroupGift
+            ? !!item.priceCents && contributedCents >= item.priceCents
+            : Boolean(reservations?.length)),
         reservedByMe:
-          !isOwner && Boolean(reservations?.some((r) => r.userId === userId)),
+          !isOwner &&
+          (item.isGroupGift
+            ? Boolean(contributions?.some((c) => c.userId === userId))
+            : Boolean(reservations?.some((r) => r.userId === userId))),
       };
     }),
   };
@@ -108,6 +141,7 @@ export async function reserveGift(
   });
   if (
     !item ||
+    item.isGroupGift ||
     item.deletedAt ||
     item.wishlist.archivedAt ||
     item.wishlist.deletedAt ||

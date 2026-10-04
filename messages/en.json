@@ -44,7 +44,8 @@
     "myReservations": "Reserved",
     "navHome": "Home",
     "navFamily": "Family",
-    "navEvents": "Dates"
+    "navEvents": "Dates",
+    "navFeedback": "Report a problem"
   },
   "wishlist": {
     "createTitle": "Create a new Wishlist",
@@ -100,7 +101,14 @@
     "photo": "Gift photo",
     "photoHint": "JPEG, PNG or WebP, up to 5 MB.",
     "removePhoto": "Remove current photo",
-    "publicShareHelp": "This list is public. Sign in to reserve. Reservations stay hidden from the owner."
+    "publicShareHelp": "This list is public. Sign in to reserve. Reservations stay hidden from the owner.",
+    "allowDuplicate": "Add this gift despite the duplicate",
+    "groupGift": "Group gift",
+    "groupHint": "Choose at creation with a price in euros. Others can pledge a contribution; no payment is made.",
+    "occasion": "Occasion",
+    "neededBy": "Preferred date",
+    "preferences": "Preferences and general ideas",
+    "preferencesHint": "These details will be visible to people who can view your list."
   },
   "family": {
     "title": "Family Space",
@@ -201,7 +209,10 @@
     "wrongPassword": "Your current password is incorrect.",
     "samePassword": "Choose a password different from your previous one.",
     "transferFirst": "Transfer family ownership before leaving or removing its owner.",
-    "lastAdmin": "The family must keep at least one administrator."
+    "lastAdmin": "The family must keep at least one administrator.",
+    "duplicateGift": "A gift with this link already exists in this list.",
+    "groupPriceRequired": "A group gift needs a price in euros greater than zero.",
+    "groupBudgetExceeded": "This amount exceeds the remaining budget. Refresh the list and choose a smaller amount."
   },
   "reservations": {
     "title": "My reserved gifts",
@@ -332,5 +343,36 @@
     "review": "Suggested information: check the name, price and photo before saving. Prices can change.",
     "photoAlt": "Suggested gift photo",
     "remove": "Remove suggested photo"
+  },
+  "contributions": {
+    "title": "My group gift contributions",
+    "open": "View list",
+    "help": "A contribution pledge, without payment. Arrange the purchase and settlement between yourselves. Contributions stay hidden from the owner.",
+    "progress": "{total} pledged out of {target}",
+    "mine": "My contribution: {amount}",
+    "amount": "My contribution in euros",
+    "join": "Contribute",
+    "update": "Update my contribution",
+    "cancel": "Cancel my contribution",
+    "saved": "Contribution saved.",
+    "cancelled": "Contribution cancelled.",
+    "complete": "The budget is fully covered by contributions."
+  },
+  "feedback": {
+    "title": "Report a problem or suggest an idea",
+    "intro": "Describe the problem and the steps to reproduce it. Reports are saved for review by the Wishi operator; no automated email is sent.",
+    "category": "Feedback type",
+    "BUG": "Problem",
+    "IDEA": "Idea",
+    "OTHER": "Other",
+    "message": "Your message",
+    "help": "Between 10 and 2,000 characters. Never include passwords, secret keys or private links.",
+    "send": "Save feedback",
+    "sending": "Saving…",
+    "saved": "Your feedback was saved.",
+    "history": "My recent feedback",
+    "empty": "No feedback yet.",
+    "open": "Awaiting review",
+    "resolved": "Resolved"
   }
 }

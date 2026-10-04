@@ -5,6 +5,7 @@ import { fields, itemSchema } from "@/lib/validation";
 import { refreshWishlists } from "@/lib/refresh";
 import { reserveGift, cancelGift } from "@/lib/wishlist-service";
 import { saveGiftPhoto, removeGiftPhoto } from "@/lib/gift-photos";
+import { canonicalGiftUrl } from "@/lib/duplicate-gifts";
 import {
   changeGiftState,
   readTrashedGifts,
@@ -31,6 +32,17 @@ export async function createWishlistItem(form: FormData) {
   )
     return { error: "forbidden" };
   const { price, ...data } = parsed.data;
+  if (data.isGroupGift && (!price || price <= 0))
+    return { error: "groupPriceRequired" };
+  const canonical = canonicalGiftUrl(data.url);
+  if (canonical && form.get("allowDuplicate") !== "on") {
+    const existing = await prisma.wishlistItem.findMany({
+      where: { wishlistId, deletedAt: null },
+      select: { url: true },
+    });
+    if (existing.some((item) => canonicalGiftUrl(item.url) === canonical))
+      return { error: "duplicateGift" };
+  }
   let image: string | null = null;
   try {
     image = await upload(form);
@@ -59,9 +71,24 @@ export async function updateWishlistItem(id: string, form: FormData) {
       deletedAt: null,
       wishlist: { ownerId: session.user.id, archivedAt: null, deletedAt: null },
     },
-    select: { image: true },
+    select: { image: true, isGroupGift: true, wishlistId: true },
   });
   if (!existing) return { error: "forbidden" };
+  const canonical = canonicalGiftUrl(parsed.data.url);
+  if (canonical && form.get("allowDuplicate") !== "on") {
+    const others = await prisma.wishlistItem.findMany({
+      where: {
+        wishlistId: existing.wishlistId,
+        id: { not: id },
+        deletedAt: null,
+      },
+      select: { url: true },
+    });
+    if (others.some((item) => canonicalGiftUrl(item.url) === canonical))
+      return { error: "duplicateGift" };
+  }
+  if (existing.isGroupGift && (!parsed.data.price || parsed.data.price <= 0))
+    return { error: "groupPriceRequired" };
   let image: string | null = null;
   try {
     image = await upload(form);
@@ -83,7 +110,12 @@ export async function updateWishlistItem(id: string, form: FormData) {
           deletedAt: null,
         },
       },
-      data: { ...data, priceCents: price, image: nextImage },
+      data: {
+        ...data,
+        isGroupGift: existing.isGroupGift,
+        priceCents: price,
+        image: nextImage,
+      },
     });
   } catch (error) {
     await removeGiftPhoto(image);

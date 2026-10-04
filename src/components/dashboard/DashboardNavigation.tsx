@@ -8,6 +8,7 @@ const destinations = [
   ["/dashboard/reservations", "myReservations", "✓"],
   ["/dashboard/family", "navFamily", "♧"],
   ["/dashboard/events", "navEvents", "📅"],
+  ["/dashboard/feedback", "navFeedback", "✉"],
 ] as const;
 export function DashboardNavigation() {
   const path = usePathname(),

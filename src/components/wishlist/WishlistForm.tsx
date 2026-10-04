@@ -16,6 +16,9 @@ export function WishlistForm({
     description: string | null;
     visibility: string;
     eventId: string | null;
+    occasion?: string | null;
+    neededBy?: string | null;
+    preferences?: string | null;
   };
 }) {
   const t = useTranslations("wishlist");
@@ -62,6 +65,27 @@ export function WishlistForm({
         defaultValue={initial?.description || ""}
         maxLength={2000}
       />
+      <Input
+        name="occasion"
+        label={t("occasion")}
+        defaultValue={initial?.occasion || ""}
+        maxLength={120}
+      />
+      <Input
+        name="neededBy"
+        label={t("neededBy")}
+        type="date"
+        defaultValue={initial?.neededBy || ""}
+      />
+      <label htmlFor="list-preferences">{t("preferences")}</label>
+      <textarea
+        id="list-preferences"
+        name="preferences"
+        defaultValue={initial?.preferences || ""}
+        maxLength={2000}
+        rows={3}
+      />
+      <p>{t("preferencesHint")}</p>
       <label htmlFor="visibility">{t("visibility")}</label>
       <select
         id="visibility"
