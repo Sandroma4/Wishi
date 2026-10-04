@@ -35,7 +35,7 @@ export function DashboardNavigation() {
             key={href}
             href={href}
             prefetch={true}
-            className={`${styles.navItem} ${href === "/dashboard/feedback" ? styles.mobileAuxiliary : ""}`}
+            className={`${styles.navItem} ${href === "/dashboard/feedback" ? `${styles.mobileAuxiliary} ${styles.supportLink}` : ""}`}
             aria-current={active ? "page" : undefined}
           >
             <span aria-hidden="true">

@@ -1,16 +1,22 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
+import { usePathname } from "@/i18n/routing";
 
 export function OptionsMenu({
   label,
   className,
+  mobileLabel,
   children,
+  more = false,
 }: {
   label: string;
   className: string;
+  mobileLabel?: string;
   children: ReactNode;
+  more?: boolean;
 }) {
+  const pathname = usePathname();
   const ref = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
     function outside(event: PointerEvent) {
@@ -38,12 +44,13 @@ export function OptionsMenu({
     <details
       ref={ref}
       className={className}
+      data-home={pathname === "/dashboard" ? "true" : undefined}
       onClick={(event) => {
         if ((event.target as HTMLElement).closest("a") && ref.current)
           ref.current.open = false;
       }}
     >
-      <summary>
+      <summary aria-label={label}>
         <svg
           aria-hidden="true"
           width="20"
@@ -53,11 +60,28 @@ export function OptionsMenu({
           stroke="currentColor"
           strokeWidth="1.8"
         >
-          <path d="M4 7h16M4 17h16" />
-          <circle cx="9" cy="7" r="3" fill="var(--card)" />
-          <circle cx="15" cy="17" r="3" fill="var(--card)" />
+          {more ? (
+            <path
+              d="M5 12h.01M12 12h.01M19 12h.01"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+          ) : (
+            <>
+              <path
+                d="m10 3-1 3-3 1-2-1-2 4 2 2v2l-2 2 2 4 3-1 2 1 1 3h4l1-3 2-1 3 1 2-4-2-2v-2l2-2-2-4-2 1-3-1-1-3Z"
+                transform="translate(0 -1) scale(.95)"
+              />
+              <circle cx="11.4" cy="11.4" r="3" />
+            </>
+          )}
         </svg>
-        <span>{label}</span>
+        <span className={mobileLabel ? "options-desktop-label" : undefined}>
+          {label}
+        </span>
+        {mobileLabel && (
+          <span className="options-mobile-label">{mobileLabel}</span>
+        )}
       </summary>
       {children}
     </details>

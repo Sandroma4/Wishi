@@ -1251,3 +1251,56 @@ input[type="file"] {
   outline: 2px solid var(--brand-foreground);
   outline-offset: 2px;
 }
+
+.install-app-button,
+.install-app-help > summary {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0.5rem;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--brand-foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: transparent;
+  cursor: pointer;
+}
+.install-app-help p {
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+.install-app-button:focus-visible,
+.install-app-help > summary:focus-visible {
+  outline: 2px solid var(--brand-foreground);
+  outline-offset: 2px;
+}
+
+.options-mobile-label {
+  display: none;
+}
+@media (max-width: 768px) {
+  .options-mobile-label {
+    display: inline;
+  }
+  .options-desktop-label {
+    display: none;
+  }
+}
+html[data-native="android"],
+html[data-native="android"] body {
+  height: 100%;
+}
+
+.wishlist-page .result-count,
+.wishlist-page .list-meta {
+  color: color-mix(in srgb, var(--foreground) 80%, var(--card));
+}
+.wishlist-page nav.button-row a[aria-current='page'],
+.wishlist-page nav.button-row a[aria-current='page']:hover {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}

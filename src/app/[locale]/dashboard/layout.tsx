@@ -11,6 +11,7 @@ import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { DashboardNavigation } from "@/components/dashboard/DashboardNavigation";
 import { OptionsMenu } from "@/components/dashboard/OptionsMenu";
+import { InstallApp } from "@/components/ui/InstallApp";
 export default async function DashboardLayout({
   children,
   params,
@@ -70,6 +71,7 @@ export default async function DashboardLayout({
               </span>
               <ThemeSwitcher initial={theme} />
             </div>
+            <InstallApp />
             <div className={styles.optionsLogout}>
               <SignOutButton />
             </div>

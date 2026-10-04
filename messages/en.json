@@ -2,8 +2,9 @@
   "home": {
     "title": "Welcome to Cadéoly",
     "description": "Create and share wishlists with your family members.",
-    "getStarted": "Get Started",
-    "orSignIn": "or Sign In"
+    "getStarted": "Create an account",
+    "orSignIn": "or Sign In",
+    "signIn": "Sign in"
   },
   "auth": {
     "signInTitle": "Welcome back",
@@ -48,7 +49,8 @@
     "navFeedback": "Report a problem",
     "displaySettings": "Options",
     "optionsLanguage": "Language",
-    "optionsAppearance": "Appearance"
+    "optionsAppearance": "Appearance",
+    "navMore": "More"
   },
   "wishlist": {
     "createTitle": "Create a new Wishlist",
@@ -459,5 +461,9 @@
     "emptyTrash": "No wishlists in the trash.",
     "emptyArchive": "No archived wishlists.",
     "parameters": "List settings"
+  },
+  "installApp": {
+    "button": "Install Cadéoly",
+    "help": "On iPhone: open this site in Safari, then Share → Add to Home Screen. On Android: open the browser menu, then Install app or Add to Home Screen."
   }
 }

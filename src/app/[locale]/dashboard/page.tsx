@@ -33,8 +33,12 @@ export default async function DashboardPage() {
   ]);
   return (
     <div className="stack">
-      <header>
-        <h1>{t("hello", { name: user?.name || c("unknown") })}</h1>
+      <header className={styles.greeting}>
+        <h1>
+          {t("hello", {
+            name: user?.name?.trim().split(/\s+/)[0] || c("unknown"),
+          })}
+        </h1>
         <p>{t("intro")}</p>
       </header>
       {(!familyCount || !lists.length) && (
@@ -62,6 +66,39 @@ export default async function DashboardPage() {
         </Card>
       )}
       <div className={styles.grid}>
+        <Card className={`${styles.summaryCard} ${styles.listsCard}`}>
+          <CardHeader>
+            <CardTitle>{t("myWishlists")}</CardTitle>
+          </CardHeader>
+          <CardContent className={styles.cardBody}>
+            {!lists.length ? (
+              <div className={styles.emptyContent}>
+                <span className={styles.emptyIcon}>
+                  <OccasionIcon kind="gift" />
+                </span>
+                <p>{w("empty")}</p>
+              </div>
+            ) : (
+              <ul className={styles.entries}>
+                {lists.slice(0, 3).map((list) => (
+                  <li key={list.id}>
+                    <Link href={"/dashboard/wishlists/" + list.id}>
+                      {list.name}
+                    </Link>
+                    <p>{w("itemsCount", { count: list._count.items })}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Link
+              className={`primary-link ${styles.cardAction}`}
+              href="/dashboard/wishlists/create"
+            >
+              <span aria-hidden="true">+</span>
+              {t("newWishlist")}
+            </Link>
+          </CardContent>
+        </Card>
         <Card className={styles.summaryCard}>
           <CardHeader>
             <CardTitle>{t("upcomingEvents")}</CardTitle>
@@ -98,39 +135,6 @@ export default async function DashboardPage() {
             >
               <span aria-hidden="true">+</span>
               {t("createEvent")}
-            </Link>
-          </CardContent>
-        </Card>
-        <Card className={styles.summaryCard}>
-          <CardHeader>
-            <CardTitle>{t("myWishlists")}</CardTitle>
-          </CardHeader>
-          <CardContent className={styles.cardBody}>
-            {!lists.length ? (
-              <div className={styles.emptyContent}>
-                <span className={styles.emptyIcon}>
-                  <OccasionIcon kind="gift" />
-                </span>
-                <p>{w("empty")}</p>
-              </div>
-            ) : (
-              <ul className={styles.entries}>
-                {lists.slice(0, 3).map((list) => (
-                  <li key={list.id}>
-                    <Link href={"/dashboard/wishlists/" + list.id}>
-                      {list.name}
-                    </Link>
-                    <p>{w("itemsCount", { count: list._count.items })}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-            <Link
-              className={`primary-link ${styles.cardAction}`}
-              href="/dashboard/wishlists/create"
-            >
-              <span aria-hidden="true">+</span>
-              {t("newWishlist")}
             </Link>
           </CardContent>
         </Card>

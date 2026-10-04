@@ -31,7 +31,6 @@ export function ListBrowser({
       <div className="list-toolbar">
         {filters}
         <div className="list-search">
-          <label htmlFor={searchId}>{t("search")}</label>
           <div className="list-search-field">
             <svg
               aria-hidden="true"
@@ -49,6 +48,8 @@ export function ListBrowser({
             <input
               id={searchId}
               type="search"
+              aria-label={t("search")}
+              placeholder={t("search") + "…"}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               maxLength={120}

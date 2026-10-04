@@ -37,3 +37,72 @@
 .button:hover {
   background-color: var(--primary-hover);
 }
+
+.brand {
+  margin-bottom: 1.5rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+.illustration {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 24px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  margin-bottom: 1.25rem;
+}
+.illustration svg {
+  width: 48px;
+  height: 48px;
+}
+.header {
+  max-width: 560px;
+}
+.content {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+.button,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  text-decoration: none;
+}
+.secondaryButton {
+  border: 1px solid var(--brand-foreground);
+  color: var(--brand-foreground);
+  border-radius: var(--radius);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+}
+.button:focus-visible,
+.secondaryButton:focus-visible {
+  outline: 2px solid var(--brand-foreground);
+  outline-offset: 3px;
+}
+@media (max-width: 768px) {
+  .container {
+    min-height: 100dvh;
+    padding: 2rem 1.25rem;
+  }
+  .header {
+    margin-bottom: 1.5rem;
+  }
+  .header h1 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+  .header p {
+    font-size: 1rem;
+    margin-top: 0.75rem;
+  }
+  .content {
+    flex-direction: column;
+    width: min(100%, 320px);
+  }
+}

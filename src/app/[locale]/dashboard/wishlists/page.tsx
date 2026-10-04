@@ -1,4 +1,5 @@
 import { ListBrowser } from "@/components/wishlist/ListBrowser";
+import { OptionsMenu } from "@/components/dashboard/OptionsMenu";
 import { OccasionIcon } from "@/components/ui/OccasionIcon";
 import { WishlistHelp } from "@/components/wishlist/WishlistHelp";
 import styles from "./page.module.css";
@@ -101,6 +102,15 @@ export default async function WishlistsPage({
             description: list.description,
             card: (
               <Card key={list.id} className={styles.wishlistCard}>
+                <OptionsMenu
+                  className={styles.cardMenu}
+                  label={`${nav("manage")} : ${list.name}`}
+                  more
+                >
+                  <div className={styles.menuPanel}>
+                    <ListLifecycle id={list.id} name={list.name} state={view} />
+                  </div>
+                </OptionsMenu>
                 <CardHeader>
                   <CardTitle>
                     {view === "trash" ? (
@@ -120,30 +130,26 @@ export default async function WishlistsPage({
                         `visibility${list.visibility.charAt(0) + list.visibility.slice(1).toLowerCase()}`,
                       )}
                     </span>{" "}
-                    • {tw("itemsCount", { count: list._count.items })}
+                    <span className={styles.itemCount}>
+                      • {tw("itemsCount", { count: list._count.items })}
+                    </span>
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <p className={styles.description}>
-                    {list.description || "—"}
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  {view !== "trash" && (
+                {list.description?.trim() && (
+                  <CardContent>
+                    <p className={styles.description}>{list.description}</p>
+                  </CardContent>
+                )}
+                {view !== "trash" && (
+                  <CardFooter className={styles.cardFooter}>
                     <Link
                       href={`/dashboard/wishlists/${list.id}?from=${view}`}
-                      className="secondary-link"
+                      className="primary-link"
                     >
                       {tw("viewList")}
                     </Link>
-                  )}
-                </CardFooter>
-                <CardContent>
-                  <details className="list-card-options">
-                    <summary>{nav("manage")}</summary>
-                    <ListLifecycle id={list.id} name={list.name} state={view} />
-                  </details>
-                </CardContent>
+                  </CardFooter>
+                )}
               </Card>
             ),
           }))}

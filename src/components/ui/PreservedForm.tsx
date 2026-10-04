@@ -29,6 +29,7 @@ export const PreservedForm = forwardRef<HTMLFormElement, Props>(
     return (
       <form
         {...props}
+        method="post"
         ref={formRef}
         onInvalidCapture={(event) => {
           const options = (event.target as HTMLElement).closest("details");

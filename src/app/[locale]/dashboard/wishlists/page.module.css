@@ -43,7 +43,60 @@
 .wishlistCard {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  position: relative;
+  height: auto;
+  overflow: visible;
+}
+
+.wishlistCard > div:first-of-type {
+  padding-right: 4.5rem;
+}
+.cardFooter {
+  background: transparent;
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+.cardMenu {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+.cardMenu[open] {
+  z-index: 5;
+}
+.cardMenu > summary {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 0.75rem;
+  color: var(--foreground);
+}
+.cardMenu > summary > span {
+  display: none;
+}
+.cardMenu > summary::-webkit-details-marker {
+  display: none;
+}
+.cardMenu > summary:hover {
+  background: var(--secondary);
+}
+.cardMenu > summary:focus-visible {
+  outline: 2px solid var(--brand-foreground);
+}
+.menuPanel {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: min(280px, calc(100vw - 3rem));
+  padding: 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
 }
 
 .description {
@@ -53,6 +106,11 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.itemCount {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .fullWidth {
