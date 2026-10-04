@@ -96,7 +96,7 @@ export function ListLifecycle({
                 String(form.get("name") || ""),
               );
               if (result.error) setMessage(errors(result.error));
-              else if (result.wishlistId) {
+              else if ("wishlistId" in result && result.wishlistId) {
                 router.push(`/dashboard/wishlists/${result.wishlistId}`);
                 router.refresh();
               }
