@@ -1,0 +1,98 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.5rem;
+}
+
+.titleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.ownerText {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--foreground);
+}
+
+.itemsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.itemCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.itemContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.priorityBadge {
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.itemLink {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: all 0.2s;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.itemLink:hover {
+  text-decoration-color: var(--primary);
+}
+
+.itemFooter {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+.emptyText {
+  color: var(--text-muted);
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+.statusReserved {
+  color: #d97706;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.statusAvailable {
+  color: #16a34a;
+  font-weight: 500;
+  font-size: 0.875rem;
+}

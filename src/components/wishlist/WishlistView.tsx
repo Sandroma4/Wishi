@@ -1,0 +1,117 @@
+import { getLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/routing";
+import { readWishlist } from "@/lib/wishlist-service";
+import { AddItemForm } from "./AddItemForm";
+import { ReserveButton } from "./ReserveButton";
+import { GiftDetails } from "./GiftDetails";
+import { GiftBrowser } from "./GiftBrowser";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/Card";
+export async function WishlistView({
+  wishlist,
+  loggedIn,
+  token,
+}: {
+  wishlist: NonNullable<Awaited<ReturnType<typeof readWishlist>>>;
+  loggedIn: boolean;
+  token?: string;
+}) {
+  const t = await getTranslations("wishlist");
+  const c = await getTranslations("common");
+  const locale = await getLocale();
+  return (
+    <div className="stack">
+      <header>
+        <h1>{wishlist.name}</h1>
+        <p>{t("byOwner", { name: wishlist.owner.name || c("unknown") })}</p>
+        {wishlist.event && (
+          <p>
+            {t("event")}: {wishlist.event.name}
+          </p>
+        )}
+      </header>
+      {wishlist.description && <p>{wishlist.description}</p>}
+      {wishlist.isOwner && (
+        <>
+          <p>{t("surprise")}</p>
+          {wishlist.canEdit && <AddItemForm wishlistId={wishlist.id} />}
+        </>
+      )}
+      {!wishlist.items.length && <p>{t("noItems")}</p>}
+      {wishlist.items.length > 0 && (
+        <GiftBrowser
+          owner={wishlist.isOwner}
+          gifts={wishlist.items.map((item) => ({
+            ...item,
+            card: (
+              <Card key={item.id}>
+                <CardHeader>
+                  <CardTitle>{item.title}</CardTitle>
+                  <p>
+                    {item.priceCents !== null
+                      ? new Intl.NumberFormat(locale, {
+                          style: "currency",
+                          currency: item.currency || "EUR",
+                        }).format(item.priceCents / 100)
+                      : ""}{" "}
+                    ·{" "}
+                    {t(
+                      "priority" +
+                        item.priority[0] +
+                        item.priority.slice(1).toLowerCase(),
+                    )}
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <GiftDetails gift={item} token={token} />
+                  {item.description && <p>{item.description}</p>}
+                  {item.url &&
+                    (item.url.startsWith("https://") ||
+                      item.url.startsWith("http://")) && (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t("viewProduct")}
+                      </a>
+                    )}
+                </CardContent>
+                <CardFooter>
+                  {wishlist.isOwner ? (
+                    wishlist.canEdit && (
+                      <AddItemForm wishlistId={wishlist.id} item={item} />
+                    )
+                  ) : loggedIn ? (
+                    <ReserveButton
+                      itemId={item.id}
+                      isReserved={item.isReserved}
+                      reservedByMe={item.reservedByMe}
+                      token={token}
+                    />
+                  ) : (
+                    <Link
+                      href={{
+                        pathname: "/login",
+                        query: token
+                          ? { next: "/" + locale + "/share/" + token }
+                          : { next: "/" + locale + "/lists/" + wishlist.id },
+                      }}
+                    >
+                      {t("signInToReserve")}
+                    </Link>
+                  )}
+                </CardFooter>
+              </Card>
+            ),
+          }))}
+        />
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,16 @@
+/* Fluid Grid for Dashboard */
+.grid {
+  display: grid;
+  /* Auto-fill with a fluid minimum width */
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(clamp(280px, 30vw, 400px), 1fr)
+  );
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: start; /* Prevent cards from stretching vertically unnecessarily */
+}
+
+.emptyText {
+  color: var(--muted-foreground);
+  font-size: clamp(0.875rem, 1.5vw, 0.95rem);
+}

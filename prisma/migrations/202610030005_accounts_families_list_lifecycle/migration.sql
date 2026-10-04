@@ -1,0 +1,3 @@
+ALTER TABLE "Family" ADD COLUMN "membershipVersion" INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE "Wishlist" ADD COLUMN "archivedAt" DATETIME;
+ALTER TABLE "Wishlist" ADD COLUMN "deletedAt" DATETIME;

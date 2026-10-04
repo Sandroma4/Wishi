@@ -1,0 +1,44 @@
+.toggleContainer {
+  display: inline-flex;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 0.25rem;
+  align-items: center;
+  transition: opacity 0.2s ease;
+}
+
+.toggleContainer.pending {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.toggleBtn {
+  background: transparent;
+  border: none;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.toggleBtn.active {
+  background-color: var(--primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.toggleBtn:hover:not(.active) {
+  color: var(--foreground);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.toggleBtn:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--background),
+    0 0 0 4px var(--primary);
+}
