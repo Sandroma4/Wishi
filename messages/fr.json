@@ -136,7 +136,10 @@
     "confirmRevoke": "Révoquer cette invitation ? Son lien ne permettra plus de rejoindre la famille.",
     "invitationSaved": "Invitation enregistrée. Retrouvez son lien dans les invitations en attente.",
     "invitationReplacement": "Un nouveau lien pour la même adresse remplace son ancienne invitation.",
-    "invitationShareHelp": "Envoyez ce lien uniquement à la personne invitée. Elle doit utiliser l’adresse email de l’invitation."
+    "invitationShareHelp": "Envoyez ce lien uniquement à la personne invitée. Elle doit utiliser l’adresse email de l’invitation.",
+    "renewInvitation": "Renouveler le lien",
+    "confirmRenew": "Créer un nouveau lien valable sept jours ? Le lien précédent cessera de fonctionner.",
+    "pendingHelp": "{count} invitations attendent une réponse. Partagez le lien vous-même : aucun email d’invitation n’est envoyé automatiquement."
   },
   "common": {
     "language": "Langue",
@@ -241,7 +244,10 @@
     "total": "Total des prix renseignés",
     "unpriced": "{count, plural, =1 {1 cadeau sans prix indiqué} other {# cadeaux sans prix indiqué}}",
     "currencies": "Les montants sont regroupés par devise, sans conversion.",
-    "noResults": "Aucun cadeau ne correspond à ces critères."
+    "noResults": "Aucun cadeau ne correspond à ces critères.",
+    "quickEssential": "Mes indispensables",
+    "shown": "{count} cadeaux affichés sur {total}",
+    "surpriseHelp": "Les réservations restent cachées pour préserver votre surprise."
   },
   "accountSecurity": {
     "title": "Changer mon mot de passe",
@@ -317,5 +323,14 @@
     "shareHelp": "Choisissez qui peut consulter votre liste. Vous ne verrez pas qui réserve vos cadeaux.",
     "familyDone": "Famille rejointe",
     "listDone": "Première liste créée"
+  },
+  "productImport": {
+    "button": "Préremplir depuis le lien",
+    "loading": "Lecture du lien…",
+    "help": "Collez un lien HTTPS de produit. Les champs déjà remplis sont conservés. Certains sites bloquent la lecture ; vous pouvez toujours remplir le cadeau vous-même.",
+    "failed": "Informations indisponibles. Complétez les champs manuellement ou réessayez dans quelques secondes.",
+    "review": "Informations proposées : vérifiez le nom, le prix et la photo avant de sauvegarder. Le prix peut changer.",
+    "photoAlt": "Photo proposée pour le cadeau",
+    "remove": "Retirer la photo proposée"
   }
 }

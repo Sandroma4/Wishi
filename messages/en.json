@@ -136,7 +136,10 @@
     "confirmRevoke": "Revoke this invitation? Its link will no longer allow joining the family.",
     "invitationSaved": "Invitation saved. Find its link in pending invitations.",
     "invitationReplacement": "A new link for the same email replaces its previous invitation.",
-    "invitationShareHelp": "Send this link only to the invited person. They must use the invitation email address."
+    "invitationShareHelp": "Send this link only to the invited person. They must use the invitation email address.",
+    "renewInvitation": "Renew link",
+    "confirmRenew": "Create a new link valid for seven days? The previous link will stop working.",
+    "pendingHelp": "{count} invitations await a reply. Share the link yourself: invitation emails are not sent automatically."
   },
   "common": {
     "language": "Language",
@@ -241,7 +244,10 @@
     "total": "Total of listed prices",
     "unpriced": "{count, plural, =1 {1 gift without a listed price} other {# gifts without a listed price}}",
     "currencies": "Amounts are grouped by currency without conversion.",
-    "noResults": "No gifts match these criteria."
+    "noResults": "No gifts match these criteria.",
+    "quickEssential": "Essential gifts",
+    "shown": "Showing {count} of {total} gifts",
+    "surpriseHelp": "Reservations stay hidden to preserve your surprise."
   },
   "accountSecurity": {
     "title": "Change my password",
@@ -317,5 +323,14 @@
     "shareHelp": "Choose who can view your list. You will not see who reserves your gifts.",
     "familyDone": "Family joined",
     "listDone": "First wishlist created"
+  },
+  "productImport": {
+    "button": "Fill from product link",
+    "loading": "Reading link…",
+    "help": "Paste an HTTPS product link. Existing fields are kept. Some websites block previews; you can always fill in the gift yourself.",
+    "failed": "Information unavailable. Fill in the fields manually or retry in a few seconds.",
+    "review": "Suggested information: check the name, price and photo before saving. Prices can change.",
+    "photoAlt": "Suggested gift photo",
+    "remove": "Remove suggested photo"
   }
 }

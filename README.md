@@ -131,3 +131,9 @@ Google Drive est connecté et une première sauvegarde privée a été téléver
 Le tableau de bord guide les premiers pas tant que l’utilisateur n’a pas de famille ou de liste. Les liens publics, liens de liste et invitations disposent de copie, partage sur l’appareil et QR code généré localement, avec copie manuelle de secours. Les QR codes suivent la révocation et le renouvellement des liens.
 
 `npm start` lance le serveur et, sur Railway avec un volume monté, un processus de sauvegarde quotidienne vérifiée. Voir [les limites et le contrôle des sauvegardes hébergées](docs/hosted-backups.md). Aucune nouvelle offre payante n’est activée.
+
+## Préremplissage des cadeaux et filtres rapides
+
+Le formulaire lit, à la demande du propriétaire, les métadonnées publiques d’un lien HTTPS et propose le titre, le prix déclaré en EUR et une photo. Les champs déjà remplis sont conservés, les informations restent modifiables et rien n’est enregistré avant validation. Les liens internes, ports non standards et identifiants dans les URL sont refusés ; les destinations DNS sont vérifiées et fixées pour chaque requête, y compris après redirection. Les réponses et images sont bornées ; les images sont converties avant utilisation. Les marchands qui bloquent les requêtes ou ne fournissent pas ces métadonnées nécessitent une saisie manuelle. Aucun prix en devise étrangère n’est converti implicitement.
+
+Les listes disposent de raccourcis pour les indispensables et, pour les visiteurs seulement, les cadeaux disponibles. Les invitations en attente expliquent le partage manuel et peuvent être renouvelées pour sept jours : l’ancien lien est invalidé. Aucun email d’invitation n’est envoyé automatiquement.

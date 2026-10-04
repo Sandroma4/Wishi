@@ -63,6 +63,26 @@ export async function cancelInvitation(id: string) {
   refreshWishlists();
   return result;
 }
+export async function renewInvitation(id: string) {
+  const session = await auth();
+  if (!session?.user?.id) return { error: "unauthorized" };
+  const invitation = await prisma.invitation.findFirst({
+    where: {
+      id,
+      family: { members: { some: { userId: session.user.id, role: "ADMIN" } } },
+    },
+    select: { familyId: true, email: true },
+  });
+  if (!invitation) return { error: "forbidden" };
+  const result = await issueInvitation(
+    prisma,
+    invitation.familyId,
+    invitation.email,
+    session.user.id,
+  );
+  refreshWishlists();
+  return result;
+}
 export async function acceptInvitation(token: string) {
   const session = await auth();
   if (!session?.user?.id) return { error: "unauthorized" };

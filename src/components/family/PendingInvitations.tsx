@@ -8,6 +8,9 @@ export async function PendingInvitations({ familyId }: { familyId: string }) {
   return (
     <section className="stack">
       <h3>{t("pendingInvitations")}</h3>
+      {!!invitations.length && (
+        <p>{t("pendingHelp", { count: invitations.length })}</p>
+      )}
       {!invitations.length && <p>{t("noPendingInvitations")}</p>}
       <ul className="stack">
         {invitations.map((invitation) => (

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
-import { cancelInvitation } from "@/app/actions/family";
+import { cancelInvitation, renewInvitation } from "@/app/actions/family";
 import { ShareLink } from "@/components/ui/ShareLink";
 import { Button } from "@/components/ui/Button";
 export function InvitationControls({
@@ -19,6 +19,20 @@ export function InvitationControls({
   const [pending, setPending] = useState(false),
     [message, setMessage] = useState("");
   const href = `/invite/${token}`;
+  async function renew() {
+    if (!window.confirm(t("confirmRenew"))) return;
+    setPending(true);
+    setMessage("");
+    try {
+      const result = await renewInvitation(id);
+      if (result.error) setMessage(errors(result.error));
+      else router.refresh();
+    } catch {
+      setMessage(errors("unexpected"));
+    } finally {
+      setPending(false);
+    }
+  }
   async function revoke() {
     if (!window.confirm(t("confirmRevoke"))) return;
     setPending(true);
@@ -34,7 +48,7 @@ export function InvitationControls({
     }
   }
   return (
-    <div className="stack">
+    <div className="stack" aria-busy={pending}>
       <ShareLink
         key={token}
         href={"/" + locale + href}
@@ -42,6 +56,9 @@ export function InvitationControls({
         help={t("invitationShareHelp")}
       />
       <div className="button-row">
+        <Button variant="secondary" onClick={renew} disabled={pending}>
+          {t("renewInvitation")}
+        </Button>
         <Button variant="danger" onClick={revoke} disabled={pending}>
           {t("revokeInvitation")}
         </Button>

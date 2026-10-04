@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { previewProduct } from "@/app/actions/product-preview";
 import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import {
@@ -34,6 +35,41 @@ export function AddItemForm({
   const c = useTranslations("common");
   const errors = useTranslations("errors");
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
+  const importText = useTranslations("productImport");
+  const [importing, setImporting] = useState(false);
+  const [importMessage, setImportMessage] = useState("");
+  const [importedPhoto, setImportedPhoto] = useState("");
+  async function importLink() {
+    const form = formRef.current;
+    if (!form) return;
+    const url = (form.elements.namedItem("url") as HTMLInputElement).value;
+    setImporting(true);
+    setImportMessage("");
+    try {
+      const result = await previewProduct(wishlistId, url);
+      if ((form.elements.namedItem("url") as HTMLInputElement).value !== url)
+        return;
+      if ("error" in result) {
+        setImportMessage(importText("failed"));
+        return;
+      }
+      for (const key of ["title", "price"] as const) {
+        const input = form.elements.namedItem(key) as HTMLInputElement;
+        if (!input.value && result[key]) input.value = result[key];
+      }
+      if (!item?.image && result.photo) setImportedPhoto(result.photo);
+      setImportMessage(
+        importText(
+          result.title || result.price || result.photo ? "review" : "failed",
+        ),
+      );
+    } catch {
+      setImportMessage(importText("failed"));
+    } finally {
+      setImporting(false);
+    }
+  }
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
@@ -41,6 +77,16 @@ export function AddItemForm({
     setPending(true);
     setError("");
     form.set("wishlistId", wishlistId);
+    const photo = form.get("photo");
+    if (importedPhoto && !(photo instanceof File && photo.size)) {
+      const bytes = Uint8Array.from(atob(importedPhoto), (letter) =>
+        letter.charCodeAt(0),
+      );
+      form.set(
+        "photo",
+        new File([bytes], "product.webp", { type: "image/webp" }),
+      );
+    }
     try {
       const result = item
         ? await updateWishlistItem(item.id, form)
@@ -48,6 +94,8 @@ export function AddItemForm({
       if (result.error) setError(errors(result.error));
       else {
         setOpen(false);
+        setImportedPhoto("");
+        setImportMessage("");
         router.refresh();
       }
     } catch {
@@ -90,9 +138,32 @@ export function AddItemForm({
   return (
     <Card>
       <CardContent>
-        <form action={submit} className="stack">
+        <form
+          ref={formRef}
+          action={submit}
+          className="stack"
+          aria-busy={pending || importing}
+        >
           <h3>{t(item ? "editGift" : "addItem")}</h3>
           {error && <p role="alert">{error}</p>}
+          <Input
+            id={prefix + "-url"}
+            name="url"
+            type="url"
+            label={t("link")}
+            defaultValue={item?.url || ""}
+            maxLength={2048}
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={pending || importing}
+            onClick={importLink}
+          >
+            {importText(importing ? "loading" : "button")}
+          </Button>
+          <p>{importText("help")}</p>
+          <p role="status">{importMessage}</p>
           <Input
             id={prefix + "-title"}
             name="title"
@@ -107,13 +178,6 @@ export function AddItemForm({
             label={t("descriptionGift")}
             defaultValue={item?.description || ""}
             maxLength={2000}
-          />
-          <Input
-            id={prefix + "-url"}
-            name="url"
-            type="url"
-            label={t("link")}
-            defaultValue={item?.url || ""}
           />
           <Input
             id={prefix + "-price"}
@@ -146,6 +210,26 @@ export function AddItemForm({
             aria-describedby={prefix + "-photo-hint"}
           />
           <p id={prefix + "-photo-hint"}>{t("photoHint")}</p>
+          {importedPhoto && (
+            <div className="stack">
+              {/* Local preview never contacts the merchant from the browser. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={"data:image/webp;base64," + importedPhoto}
+                width={160}
+                height={160}
+                style={{ objectFit: "contain" }}
+                alt={importText("photoAlt")}
+              />
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setImportedPhoto("")}
+              >
+                {importText("remove")}
+              </Button>
+            </div>
+          )}
           {item?.image && (
             <label>
               <input type="checkbox" name="removePhoto" /> {t("removePhoto")}
@@ -164,13 +248,13 @@ export function AddItemForm({
             ))}
           </select>
           <div className="button-row">
-            <Button disabled={pending}>
+            <Button disabled={pending || importing}>
               {pending ? c("saving") : c("save")}
             </Button>
             <Button
               type="button"
               variant="secondary"
-              disabled={pending}
+              disabled={pending || importing}
               onClick={() => setOpen(false)}
             >
               {c("cancel")}

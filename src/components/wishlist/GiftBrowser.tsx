@@ -118,10 +118,38 @@ export function GiftBrowser({
         </div>
       </div>
       <div className="button-row">
+        <Button
+          variant="secondary"
+          aria-pressed={filters.priority === "ESSENTIAL"}
+          onClick={() =>
+            change(
+              "priority",
+              filters.priority === "ESSENTIAL" ? "all" : "ESSENTIAL",
+            )
+          }
+        >
+          {t("quickEssential")}
+        </Button>
+        {!owner && (
+          <Button
+            variant="secondary"
+            aria-pressed={filters.status === "available"}
+            onClick={() =>
+              change(
+                "status",
+                filters.status === "available" ? "all" : "available",
+              )
+            }
+          >
+            {t("available")}
+          </Button>
+        )}
         <Button variant="secondary" onClick={() => setFilters(initial)}>
           {t("reset")}
         </Button>
-        <p role="status">{t("count", { count: visible.length })}</p>
+        <p role="status">
+          {t("shown", { count: visible.length, total: gifts.length })}
+        </p>
       </div>
       <div className="gift-summary">
         <p>
@@ -138,6 +166,7 @@ export function GiftBrowser({
         {unpriced > 0 && <p>{t("unpriced", { count: unpriced })}</p>}
         {mixedCurrencies && <p>{t("currencies")}</p>}
       </div>
+      {owner && <p>{t("surpriseHelp")}</p>}
       {!visible.length && <p>{t("noResults")}</p>}
       <div className="gift-grid">
         {visible.map((gift) => (
