@@ -24,29 +24,15 @@ export function DashboardNavigation() {
           <Link
             key={href}
             href={href}
-            className={styles.navItem}
+            prefetch={true}
+            className={`${styles.navItem} ${href === "/dashboard/feedback" ? styles.mobileAuxiliary : ""}`}
             aria-current={active ? "page" : undefined}
           >
             <span aria-hidden="true">{icon}</span>
-            {t(key)}
+            <span className={styles.navLabel}>{t(key)}</span>
           </Link>
         );
       })}
     </nav>
   );
-}
-export function DashboardPageTitle() {
-  const path = usePathname(),
-    t = useTranslations("dashboard"),
-    w = useTranslations("wishlist");
-  const key = path.startsWith("/dashboard/events/")
-    ? "navEvents"
-    : destinations.find(([href]) => href === path)?.[1] || "myProfile";
-  const title =
-    path === "/dashboard/wishlists/create"
-      ? t("newWishlist")
-      : path.startsWith("/dashboard/wishlists/")
-        ? w("viewList")
-        : t(key);
-  return <span className={styles.pageTitle}>{title}</span>;
 }

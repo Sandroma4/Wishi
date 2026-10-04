@@ -8,7 +8,9 @@
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
   border: 1px solid transparent;
   padding: 0.5rem 1rem;
   line-height: 1.5;
@@ -36,11 +38,10 @@
 .primary:hover {
   background-color: var(--primary-hover);
   box-shadow: 0 4px 12px var(--ring);
-  transform: translateY(-1px);
 }
 
 .secondary {
-  background-color: var(--secondary);
+  background-color: var(--card);
   color: var(--secondary-foreground);
   border-color: var(--border);
 }

@@ -1,4 +1,5 @@
 "use client";
+import { PreservedForm } from "@/components/ui/PreservedForm";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
@@ -57,7 +58,20 @@ export function ContributionForm({
     <section className="stack" aria-busy={pending}>
       <p>{t("help")}</p>
       {total !== undefined && target !== undefined && (
-        <p>{t("progress", { total: money(total), target: money(target) })}</p>
+        <div className="stack">
+          <p>{t("progress", { total: money(total), target: money(target) })}</p>
+          {target > 0 && (
+            <progress
+              className="gift-progress"
+              value={Math.min(total, target)}
+              max={target}
+              aria-label={t("progress", {
+                total: money(total),
+                target: money(target),
+              })}
+            />
+          )}
+        </div>
       )}
       {!!mine && <p>{t("mine", { amount: money(mine) })}</p>}
       {!cancelOnly &&
@@ -67,7 +81,7 @@ export function ContributionForm({
         !mine && <p>{t("complete")}</p>}
       {!cancelOnly &&
         (target === undefined || (total || 0) - mine < target) && (
-          <form
+          <PreservedForm
             className="stack"
             action={(form) => perform(String(form.get("amount") || ""))}
           >
@@ -86,7 +100,7 @@ export function ContributionForm({
               required
             />
             <Button disabled={pending}>{t(mine ? "update" : "join")}</Button>
-          </form>
+          </PreservedForm>
         )}
       {!!mine && (
         <Button

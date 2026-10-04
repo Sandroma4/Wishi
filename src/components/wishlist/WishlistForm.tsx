@@ -1,4 +1,5 @@
 "use client";
+import { PreservedForm } from "@/components/ui/PreservedForm";
 import { useState } from "react";
 import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
@@ -8,8 +9,10 @@ import { Button } from "@/components/ui/Button";
 export function WishlistForm({
   events,
   initial,
+  defaultEventId,
 }: {
   events: { id: string; name: string }[];
+  defaultEventId?: string;
   initial?: {
     id: string;
     name: string;
@@ -22,20 +25,33 @@ export function WishlistForm({
   };
 }) {
   const t = useTranslations("wishlist");
+  const flow = useTranslations("uiFlow");
+  const help = useTranslations("usageHelp");
+  const [visibility, setVisibility] = useState(initial?.visibility || "FAMILY");
+  const [saved, setSaved] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<string[]>([]);
+  const fieldError = (name: string) =>
+    fieldErrors.includes(name) ? flow("checkField") : undefined;
   const c = useTranslations("common");
   const errors = useTranslations("errors");
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   async function submit(form: FormData) {
+    if (pending) return;
+    setSaved(false);
+    setFieldErrors([]);
     setPending(true);
     setError("");
     try {
       const result = initial
         ? await updateWishlist(initial.id, form)
         : await createWishlist(form);
-      if (result.error) setError(errors(result.error));
-      else {
+      if (result.error) {
+        setError(errors(result.error));
+        setFieldErrors("fields" in result ? result.fields || [] : []);
+      } else {
+        setSaved(true);
         if ("wishlistId" in result)
           router.push("/dashboard/wishlists/" + result.wishlistId);
         router.refresh();
@@ -47,50 +63,30 @@ export function WishlistForm({
     }
   }
   return (
-    <form action={submit} className="stack">
+    <PreservedForm
+      action={submit}
+      className="stack list-form"
+      aria-busy={pending}
+    >
       <h2>{t(initial ? "editTitle" : "createTitle")}</h2>
       {error && <p role="alert">{error}</p>}
+      {saved && <p role="status">{flow("listSaved")}</p>}
       <Input
         id="list-name"
         name="name"
+        error={fieldError("name")}
         label={t("name")}
         defaultValue={initial?.name}
         required
         maxLength={120}
       />
-      <Input
-        id="list-description"
-        name="description"
-        label={t("description")}
-        defaultValue={initial?.description || ""}
-        maxLength={2000}
-      />
-      <Input
-        name="occasion"
-        label={t("occasion")}
-        defaultValue={initial?.occasion || ""}
-        maxLength={120}
-      />
-      <Input
-        name="neededBy"
-        label={t("neededBy")}
-        type="date"
-        defaultValue={initial?.neededBy || ""}
-      />
-      <label htmlFor="list-preferences">{t("preferences")}</label>
-      <textarea
-        id="list-preferences"
-        name="preferences"
-        defaultValue={initial?.preferences || ""}
-        maxLength={2000}
-        rows={3}
-      />
-      <p>{t("preferencesHint")}</p>
       <label htmlFor="visibility">{t("visibility")}</label>
       <select
         id="visibility"
         name="visibility"
-        defaultValue={initial?.visibility || "FAMILY"}
+        value={visibility}
+        onChange={(event) => setVisibility(event.target.value)}
+        aria-describedby="visibility-help"
       >
         {["PRIVATE", "FAMILY", "LINK", "PUBLIC"].map((value) => (
           <option key={value} value={value}>
@@ -98,20 +94,64 @@ export function WishlistForm({
           </option>
         ))}
       </select>
-      <label htmlFor="list-event">{t("event")}</label>
-      <select
-        id="list-event"
-        name="eventId"
-        defaultValue={initial?.eventId || ""}
+      <p id="visibility-help">{help(visibility.toLowerCase() + "Help")}</p>
+      <details
+        className="form-options"
+        open={defaultEventId ? true : undefined}
       >
-        <option value="">{t("noEvent")}</option>
-        {events.map((event) => (
-          <option value={event.id} key={event.id}>
-            {event.name}
-          </option>
-        ))}
-      </select>
-      <div className="button-row">
+        <summary>{flow("moreOptions")}</summary>
+        <div className="stack">
+          <Input
+            id="list-description"
+            name="description"
+            error={fieldError("description")}
+            label={t("description")}
+            defaultValue={initial?.description || ""}
+            maxLength={2000}
+          />
+          <Input
+            name="occasion"
+            error={fieldError("occasion")}
+            label={t("occasion")}
+            defaultValue={initial?.occasion || ""}
+            maxLength={120}
+          />
+          <Input
+            name="neededBy"
+            error={fieldError("neededBy")}
+            label={t("neededBy")}
+            type="date"
+            defaultValue={initial?.neededBy || ""}
+          />
+          <label htmlFor="list-preferences">{t("preferences")}</label>
+          <textarea
+            id="list-preferences"
+            name="preferences"
+            defaultValue={initial?.preferences || ""}
+            maxLength={2000}
+            rows={3}
+            aria-invalid={fieldErrors.includes("preferences")}
+            aria-describedby="preferences-help"
+          />
+          <p id="preferences-help">
+            {fieldError("preferences") || t("preferencesHint")}
+          </p>
+          <label htmlFor="list-event">{t("event")}</label>
+          <select
+            id="list-event"
+            name="eventId"
+            defaultValue={initial?.eventId || defaultEventId || ""}
+          >
+            <option value="">{t("noEvent")}</option>
+            {events.map((event) => (
+              <option value={event.id} key={event.id}>
+                {event.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </details>
+      <div className="button-row form-actions">
         <Button type="submit" disabled={pending}>
           {pending ? c("saving") : c("save")}
         </Button>
@@ -119,6 +159,6 @@ export function WishlistForm({
           {c("cancel")}
         </Button>
       </div>
-    </form>
+    </PreservedForm>
   );
 }

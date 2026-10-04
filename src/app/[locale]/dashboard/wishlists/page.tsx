@@ -1,3 +1,6 @@
+import { ListBrowser } from "@/components/wishlist/ListBrowser";
+import { OccasionIcon } from "@/components/ui/OccasionIcon";
+import { WishlistHelp } from "@/components/wishlist/WishlistHelp";
 import styles from "./page.module.css";
 import {
   Card,
@@ -21,20 +24,24 @@ export default async function WishlistsPage({
   const requested = (await searchParams).view;
   const view =
     requested === "archived" || requested === "trash" ? requested : "active";
-  const wishlists = await getMyWishlists(view);
-  const lifecycle = await getTranslations("listLifecycle");
-  const t = await getTranslations("dashboard");
-  const tw = await getTranslations("wishlist");
+  const [wishlists, lifecycle, t, tw] = await Promise.all([
+    getMyWishlists(view),
+    getTranslations("listLifecycle"),
+    getTranslations("dashboard"),
+    getTranslations("wishlist"),
+  ]);
 
+  const nav = await getTranslations("listNavigation");
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2>{t("myWishlists")}</h2>
-        <Link href="/dashboard/wishlists/create">
-          <Button>{t("newWishlist")}</Button>
+        <h1>{t("myWishlists")}</h1>
+        <Link className="primary-link" href="/dashboard/wishlists/create">
+          {t("newWishlist")}
         </Link>
       </div>
 
+      <WishlistHelp />
       <nav className="button-row" aria-label={lifecycle("views")}>
         {(["active", "archived", "trash"] as const).map((state) => (
           <Link
@@ -52,48 +59,82 @@ export default async function WishlistsPage({
       {wishlists.length === 0 ? (
         <Card className={styles.emptyCard}>
           <CardContent className={styles.emptyContent}>
-            <p>{tw("empty")}</p>
-            <Link href="/dashboard/wishlists/create">
+            <div className="empty-art">
+              <OccasionIcon kind="gift" />
+            </div>
+            <p>
+              {view === "active"
+                ? tw("empty")
+                : nav(view === "trash" ? "emptyTrash" : "emptyArchive")}
+            </p>
+            <Link
+              href={
+                view === "active"
+                  ? "/dashboard/wishlists/create"
+                  : "/dashboard/wishlists"
+              }
+            >
               <Button variant="secondary" className={styles.createBtn}>
-                {tw("createFirst")}
+                {view === "active" ? tw("createFirst") : lifecycle("activeTab")}
               </Button>
             </Link>
           </CardContent>
         </Card>
       ) : (
-        <div className={styles.grid}>
-          {wishlists.map((list) => (
-            <Card key={list.id} className={styles.wishlistCard}>
-              <CardHeader>
-                <CardTitle>{list.name}</CardTitle>
-                <CardDescription>
-                  {tw(
-                    `visibility${list.visibility.charAt(0) + list.visibility.slice(1).toLowerCase()}`,
-                  )}{" "}
-                  • {tw("itemsCount", { count: list._count.items })}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className={styles.description}>{list.description || "—"}</p>
-              </CardContent>
-              <CardFooter>
-                {view !== "trash" && (
-                  <Link
-                    href={`/dashboard/wishlists/${list.id}`}
-                    className={styles.fullWidth}
-                  >
-                    <Button variant="secondary" fullWidth>
+        <ListBrowser
+          lists={wishlists.map((list) => ({
+            id: list.id,
+            name: list.name,
+            description: list.description,
+            card: (
+              <Card key={list.id} className={styles.wishlistCard}>
+                <CardHeader>
+                  <CardTitle>
+                    {view === "trash" ? (
+                      list.name
+                    ) : (
+                      <Link
+                        href={`/dashboard/wishlists/${list.id}?from=${view}`}
+                        prefetch={true}
+                      >
+                        {list.name}
+                      </Link>
+                    )}
+                  </CardTitle>
+                  <CardDescription className="list-meta">
+                    <span className="visual-badge">
+                      {tw(
+                        `visibility${list.visibility.charAt(0) + list.visibility.slice(1).toLowerCase()}`,
+                      )}
+                    </span>{" "}
+                    • {tw("itemsCount", { count: list._count.items })}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className={styles.description}>
+                    {list.description || "—"}
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  {view !== "trash" && (
+                    <Link
+                      href={`/dashboard/wishlists/${list.id}?from=${view}`}
+                      className="primary-link list-open"
+                    >
                       {tw("viewList")}
-                    </Button>
-                  </Link>
-                )}
-              </CardFooter>
-              <CardContent>
-                <ListLifecycle id={list.id} name={list.name} state={view} />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                    </Link>
+                  )}
+                </CardFooter>
+                <CardContent>
+                  <details className="list-card-options">
+                    <summary>{nav("manage")}</summary>
+                    <ListLifecycle id={list.id} name={list.name} state={view} />
+                  </details>
+                </CardContent>
+              </Card>
+            ),
+          }))}
+        />
       )}
     </div>
   );

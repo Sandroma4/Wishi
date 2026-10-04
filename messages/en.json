@@ -45,7 +45,8 @@
     "navHome": "Home",
     "navFamily": "Family",
     "navEvents": "Dates",
-    "navFeedback": "Report a problem"
+    "navFeedback": "Report a problem",
+    "displaySettings": "Options"
   },
   "wishlist": {
     "createTitle": "Create a new Wishlist",
@@ -186,7 +187,8 @@
     "saved": "Event saved.",
     "period": "Event period",
     "upcoming": "Upcoming",
-    "past": "Past"
+    "past": "Past",
+    "visualIntro": "Occasions to come together and make someone smile."
   },
   "errors": {
     "unauthorized": "Sign in to continue.",
@@ -374,5 +376,70 @@
     "empty": "No feedback yet.",
     "open": "Awaiting review",
     "resolved": "Resolved"
+  },
+  "uiFlow": {
+    "chooseMode": "How would you like to add this gift?",
+    "fromLink": "From a link",
+    "manual": "Manually",
+    "moreOptions": "More options",
+    "moreFilters": "More filters",
+    "filtersActive": "Filters active",
+    "reviewGift": "Review gift",
+    "preview": "Gift preview",
+    "previewHelp": "Review the details, then save. You can still edit them.",
+    "giftSaved": "Gift saved.",
+    "listSaved": "Wishlist saved.",
+    "checkField": "Check this field.",
+    "addAnother": "Add another gift"
+  },
+  "usageHelp": {
+    "title": "Getting started: sharing and gifting",
+    "privateTitle": "Private",
+    "privateHelp": "Only the owner can view this wishlist.",
+    "familyTitle": "Family",
+    "familyHelp": "Members of your families can access this wishlist.",
+    "linkTitle": "Sharing link",
+    "linkHelp": "Anyone with the link can view this wishlist. Share it only with the people you choose.",
+    "publicTitle": "Public",
+    "publicHelp": "Anyone can view this wishlist.",
+    "groupTitle": "Group gift",
+    "groupHelp": "Set a price so friends can pledge a contribution. Wishi does not collect payments. Contributions stay hidden from the owner to preserve the surprise."
+  },
+  "dailyFlow": {
+    "eventListsHelp": "Find the participants’ wishlists you have permission to view here.",
+    "createEventList": "Create my wishlist for this event",
+    "sharingTitle": "Share this wishlist",
+    "inviteFamily": "Invite friends to my family",
+    "privateSharing": "To share this wishlist, change its visibility in the wishlist settings.",
+    "noPastEvents": "Past events will appear here.",
+    "emptyEvents": "Create an event to bring your friends’ wishlists together.",
+    "familyFirst": "Create or join a family before preparing an event.",
+    "createFamily": "Create or join a family",
+    "emptyFamily": "Create a family, then invite friends. To join an existing family, ask its administrator for an invitation.",
+    "emptyGiftsOwner": "Use “Add a gift” to start, from a link or manually.",
+    "emptyGiftsVisitor": "The owner has not added any gifts yet. Check this wishlist again later."
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "Automatic"
+  },
+  "navigationLoading": {
+    "label": "Loading page…"
+  },
+  "listNavigation": {
+    "search": "Search wishlists",
+    "shown": "{count, plural, one {# wishlist} other {# wishlists}} of {total}",
+    "noResults": "No wishlists match your search.",
+    "manage": "Manage wishlist",
+    "back": "My wishlists",
+    "backFamily": "Family space",
+    "sections": "Wishlist navigation",
+    "gifts": "Gifts",
+    "share": "Sharing",
+    "settings": "Wishlist settings",
+    "emptyTrash": "No wishlists in the trash.",
+    "emptyArchive": "No archived wishlists."
   }
 }

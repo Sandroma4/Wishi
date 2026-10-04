@@ -1,4 +1,5 @@
 "use client";
+import { PreservedForm } from "@/components/ui/PreservedForm";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -66,7 +67,7 @@ export function AuthForm({
     }
   }
   return (
-    <main className="public-container">
+    <main className="public-container auth-container">
       <Card>
         <CardHeader>
           <CardTitle>{t(register ? "signUpTitle" : "signInTitle")}</CardTitle>
@@ -76,7 +77,7 @@ export function AuthForm({
         </CardHeader>
         <CardContent>
           {passwordChanged && <p role="status">{recovery("resetSuccess")}</p>}
-          <form action={submit} className="stack" aria-busy={pending}>
+          <PreservedForm action={submit} className="stack" aria-busy={pending}>
             {error && <p role="alert">{error}</p>}
             {register && (
               <Input
@@ -120,7 +121,7 @@ export function AuthForm({
                     : "signIn",
               )}
             </Button>
-          </form>
+          </PreservedForm>
         </CardContent>
         <CardFooter className="stack">
           {!register && (

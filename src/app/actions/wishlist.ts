@@ -20,7 +20,11 @@ export async function createWishlist(form: FormData) {
   const session = await auth();
   if (!session?.user?.id) return { error: "unauthorized" };
   const parsed = wishlistSchema.safeParse(fields(form));
-  if (!parsed.success) return { error: "invalidFields" };
+  if (!parsed.success)
+    return {
+      error: "invalidFields",
+      fields: Object.keys(parsed.error.flatten().fieldErrors),
+    };
   if (!(await validEvent(parsed.data.eventId, session.user.id)))
     return { error: "forbidden" };
   const list = await prisma.wishlist.create({
@@ -33,7 +37,11 @@ export async function updateWishlist(id: string, form: FormData) {
   const session = await auth();
   if (!session?.user?.id) return { error: "unauthorized" };
   const parsed = wishlistSchema.safeParse(fields(form));
-  if (!parsed.success) return { error: "invalidFields" };
+  if (!parsed.success)
+    return {
+      error: "invalidFields",
+      fields: Object.keys(parsed.error.flatten().fieldErrors),
+    };
   if (!(await validEvent(parsed.data.eventId, session.user.id)))
     return { error: "forbidden" };
   const updated = await prisma.wishlist.updateMany({

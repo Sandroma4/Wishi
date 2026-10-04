@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { changeShareLink } from "@/app/actions/wishlist";
 import { Button } from "@/components/ui/Button";
 import { ShareLink } from "@/components/ui/ShareLink";
@@ -15,6 +15,8 @@ export function WishlistManager({
   token: string | null;
 }) {
   const t = useTranslations("wishlist");
+  const help = useTranslations("usageHelp");
+  const flow = useTranslations("dailyFlow");
   const errors = useTranslations("errors");
   const locale = useLocale();
   const router = useRouter();
@@ -35,19 +37,31 @@ export function WishlistManager({
     }
   }
   return (
-    <div className="stack" aria-busy={pending}>
+    <section
+      className="stack gift-preview"
+      aria-busy={pending}
+      aria-label={flow("sharingTitle")}
+    >
+      <h2>{flow("sharingTitle")}</h2>
+      <p>{help(visibility.toLowerCase() + "Help")}</p>
+      {visibility === "FAMILY" && (
+        <Link className="primary-link" href="/dashboard/family">
+          {flow("inviteFamily")}
+        </Link>
+      )}
+      {visibility === "PRIVATE" && <p>{flow("privateSharing")}</p>}
       {visibility === "PUBLIC" && (
-        <ShareLink
-          href={"/" + locale + "/lists/" + id}
-          title="Wishi"
-          help={t("publicShareHelp")}
-        />
+        <ShareLink href={"/" + locale + "/lists/" + id} title="Wishi" />
       )}
       {visibility === "LINK" && (
         <>
           <p>{t("shareHelp")}</p>
           <div className="button-row">
-            <Button disabled={pending} onClick={() => share(false)}>
+            <Button
+              variant={link ? "secondary" : "primary"}
+              disabled={pending}
+              onClick={() => share(false)}
+            >
               {t("share")}
             </Button>
             {link && (
@@ -64,6 +78,6 @@ export function WishlistManager({
         </>
       )}
       {message && <p role="status">{message}</p>}
-    </div>
+    </section>
   );
 }

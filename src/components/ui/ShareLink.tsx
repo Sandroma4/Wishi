@@ -56,7 +56,6 @@ export function ShareLink({
       <div className="button-row">
         <Button
           type="button"
-          variant="secondary"
           disabled={pending}
           onClick={() => perform("copy")}
         >

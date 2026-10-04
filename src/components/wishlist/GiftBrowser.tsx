@@ -24,6 +24,7 @@ export function GiftBrowser({
   owner: boolean;
 }) {
   const t = useTranslations("giftSearch");
+  const flow = useTranslations("uiFlow");
   const w = useTranslations("wishlist");
   const locale = useLocale();
   const id = useId();
@@ -54,52 +55,6 @@ export function GiftBrowser({
           onChange={(e) => change("query", e.target.value)}
           maxLength={120}
         />
-        {!mixedCurrencies && (
-          <Input
-            id={id + "-budget"}
-            label={t("budget", {
-              currency:
-                gifts.find((gift) => gift.priceCents !== null)?.currency ||
-                "EUR",
-            })}
-            type="number"
-            min="0"
-            step="0.01"
-            value={filters.maxPrice}
-            onChange={(e) => change("maxPrice", e.target.value)}
-          />
-        )}
-        <div className="stack">
-          <label htmlFor={id + "-priority"}>{w("priority")}</label>
-          <select
-            id={id + "-priority"}
-            value={filters.priority}
-            onChange={(e) => change("priority", e.target.value)}
-          >
-            <option value="all">{t("allPriorities")}</option>
-            {["LOW", "NORMAL", "HIGH", "ESSENTIAL"].map((value) => (
-              <option key={value} value={value}>
-                {w("priority" + value[0] + value.slice(1).toLowerCase())}
-              </option>
-            ))}
-          </select>
-        </div>
-        {!owner && (
-          <div className="stack">
-            <label htmlFor={id + "-status"}>{t("status")}</label>
-            <select
-              id={id + "-status"}
-              value={filters.status}
-              onChange={(e) => change("status", e.target.value)}
-            >
-              {["all", "available", "mine"].map((value) => (
-                <option key={value} value={value}>
-                  {t(value)}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
         <div className="stack">
           <label htmlFor={id + "-sort"}>{t("sort")}</label>
           <select
@@ -117,6 +72,62 @@ export function GiftBrowser({
           </select>
         </div>
       </div>
+      <details className="form-options">
+        <summary>
+          {flow("moreFilters")}{" "}
+          {(filters.maxPrice ||
+            filters.priority !== "all" ||
+            filters.status !== "all") && <span>· {flow("filtersActive")}</span>}
+        </summary>
+        <div className="gift-filters">
+          {!mixedCurrencies && (
+            <Input
+              id={id + "-budget"}
+              label={t("budget", {
+                currency:
+                  gifts.find((gift) => gift.priceCents !== null)?.currency ||
+                  "EUR",
+              })}
+              type="number"
+              min="0"
+              step="0.01"
+              value={filters.maxPrice}
+              onChange={(e) => change("maxPrice", e.target.value)}
+            />
+          )}
+          <div className="stack">
+            <label htmlFor={id + "-priority"}>{w("priority")}</label>
+            <select
+              id={id + "-priority"}
+              value={filters.priority}
+              onChange={(e) => change("priority", e.target.value)}
+            >
+              <option value="all">{t("allPriorities")}</option>
+              {["LOW", "NORMAL", "HIGH", "ESSENTIAL"].map((value) => (
+                <option key={value} value={value}>
+                  {w("priority" + value[0] + value.slice(1).toLowerCase())}
+                </option>
+              ))}
+            </select>
+          </div>
+          {!owner && (
+            <div className="stack">
+              <label htmlFor={id + "-status"}>{t("status")}</label>
+              <select
+                id={id + "-status"}
+                value={filters.status}
+                onChange={(e) => change("status", e.target.value)}
+              >
+                {["all", "available", "mine"].map((value) => (
+                  <option key={value} value={value}>
+                    {t(value)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+      </details>
       <div className="button-row">
         <Button
           variant="secondary"
@@ -166,7 +177,6 @@ export function GiftBrowser({
         {unpriced > 0 && <p>{t("unpriced", { count: unpriced })}</p>}
         {mixedCurrencies && <p>{t("currencies")}</p>}
       </div>
-      {owner && <p>{t("surpriseHelp")}</p>}
       {!visible.length && <p>{t("noResults")}</p>}
       <div className="gift-grid">
         {visible.map((gift) => (

@@ -7,7 +7,11 @@ import { createFamily } from "@/app/actions/family";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-export function CreateFamilyForm() {
+export function CreateFamilyForm({
+  showTitle = true,
+}: {
+  showTitle?: boolean;
+}) {
   const t = useTranslations("family");
   const errors = useTranslations("errors");
   const [error, setError] = useState<string | null>(null);
@@ -32,11 +36,14 @@ export function CreateFamilyForm() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{t("createFamily")}</CardTitle>
-      </CardHeader>
+      {showTitle && (
+        <CardHeader>
+          <CardTitle>{t("createFamily")}</CardTitle>
+        </CardHeader>
+      )}
       <CardContent>
         <form
+          id="create-family-form"
           onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
         >

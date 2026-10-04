@@ -1,4 +1,5 @@
 "use client";
+import { PreservedForm } from "@/components/ui/PreservedForm";
 import { useState } from "react";
 import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
@@ -8,8 +9,10 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 export function CreateEventForm({
   families,
+  showTitle = true,
 }: {
   families: { id: string; name: string }[];
+  showTitle?: boolean;
 }) {
   const t = useTranslations("events");
   const errors = useTranslations("errors");
@@ -36,8 +39,13 @@ export function CreateEventForm({
   return (
     <Card>
       <CardContent>
-        <form id="create-event-form" action={submit} className="stack">
-          <h2>{t("createEvent")}</h2>
+        <PreservedForm
+          id="create-event-form"
+          action={submit}
+          className="stack"
+          aria-busy={pending}
+        >
+          {showTitle && <h2>{t("createEvent")}</h2>}
           {error && <p role="alert">{error}</p>}
           <Input
             id="event-name"
@@ -70,7 +78,7 @@ export function CreateEventForm({
           <Button disabled={pending}>
             {t(pending ? "creating" : "create")}
           </Button>
-        </form>
+        </PreservedForm>
       </CardContent>
     </Card>
   );

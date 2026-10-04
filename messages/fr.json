@@ -45,7 +45,8 @@
     "navHome": "Accueil",
     "navFamily": "Famille",
     "navEvents": "Dates",
-    "navFeedback": "Signaler un problème"
+    "navFeedback": "Signaler un problème",
+    "displaySettings": "Options"
   },
   "wishlist": {
     "createTitle": "Créer une liste d'envies",
@@ -186,7 +187,8 @@
     "saved": "Événement enregistré.",
     "period": "Période des événements",
     "upcoming": "À venir",
-    "past": "Passés"
+    "past": "Passés",
+    "visualIntro": "Les occasions de se retrouver et de faire plaisir."
   },
   "errors": {
     "unauthorized": "Connectez-vous pour continuer.",
@@ -374,5 +376,70 @@
     "empty": "Aucun retour pour le moment.",
     "open": "À examiner",
     "resolved": "Traité"
+  },
+  "uiFlow": {
+    "chooseMode": "Comment souhaites-tu ajouter ce cadeau ?",
+    "fromLink": "Depuis un lien",
+    "manual": "Manuellement",
+    "moreOptions": "Plus d’options",
+    "moreFilters": "Plus de filtres",
+    "filtersActive": "Filtres actifs",
+    "reviewGift": "Vérifier le cadeau",
+    "preview": "Aperçu du cadeau",
+    "previewHelp": "Vérifie les informations, puis enregistre. Tu peux encore les modifier.",
+    "giftSaved": "Cadeau enregistré.",
+    "listSaved": "Liste enregistrée.",
+    "checkField": "Vérifie ce champ.",
+    "addAnother": "Ajouter un autre cadeau"
+  },
+  "usageHelp": {
+    "title": "Premiers pas : partager et offrir",
+    "privateTitle": "Privée",
+    "privateHelp": "Seul le propriétaire peut consulter cette liste.",
+    "familyTitle": "Famille",
+    "familyHelp": "La liste est accessible aux membres de tes familles.",
+    "linkTitle": "Lien de partage",
+    "linkHelp": "Les personnes disposant du lien peuvent consulter la liste. Partage-le uniquement avec les personnes de ton choix.",
+    "publicTitle": "Publique",
+    "publicHelp": "La liste peut être consultée par tout le monde.",
+    "groupTitle": "Cadeau collectif",
+    "groupHelp": "Indique un prix pour permettre aux proches de proposer une participation. Wishi ne collecte aucun paiement. Les participations restent cachées au propriétaire pour préserver la surprise."
+  },
+  "dailyFlow": {
+    "eventListsHelp": "Retrouve ici les listes des participants auxquelles tu as accès.",
+    "createEventList": "Créer ma liste pour cet événement",
+    "sharingTitle": "Partager cette liste",
+    "inviteFamily": "Inviter des proches dans ma famille",
+    "privateSharing": "Pour partager cette liste, modifie sa visibilité dans les options de la liste.",
+    "noPastEvents": "Tes événements passés apparaîtront ici.",
+    "emptyEvents": "Crée un événement pour réunir les listes de tes proches.",
+    "familyFirst": "Crée ou rejoins une famille avant de préparer un événement.",
+    "createFamily": "Créer ou rejoindre une famille",
+    "emptyFamily": "Crée une famille, puis invite tes proches. Pour rejoindre une famille existante, demande une invitation à son administrateur.",
+    "emptyGiftsOwner": "Utilise « Ajouter un cadeau » pour commencer, depuis un lien ou manuellement.",
+    "emptyGiftsVisitor": "Le propriétaire n’a pas encore ajouté de cadeaux. Reviens consulter cette liste plus tard."
+  },
+  "theme": {
+    "label": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Automatique"
+  },
+  "navigationLoading": {
+    "label": "Chargement de la page…"
+  },
+  "listNavigation": {
+    "search": "Rechercher une liste",
+    "shown": "{count, plural, one {# liste} other {# listes}} sur {total}",
+    "noResults": "Aucune liste ne correspond à ta recherche.",
+    "manage": "Gérer la liste",
+    "back": "Mes listes",
+    "backFamily": "Espace famille",
+    "sections": "Navigation dans la liste",
+    "gifts": "Cadeaux",
+    "share": "Partage",
+    "settings": "Réglages de la liste",
+    "emptyTrash": "Aucune liste dans la corbeille.",
+    "emptyArchive": "Aucune liste archivée."
   }
 }

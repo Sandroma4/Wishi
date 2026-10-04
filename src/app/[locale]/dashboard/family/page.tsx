@@ -1,3 +1,4 @@
+import { OccasionIcon } from "@/components/ui/OccasionIcon";
 import { auth } from "@/auth";
 import styles from "./page.module.css";
 import { getMyFamilies } from "@/app/actions/family";
@@ -16,9 +17,13 @@ import { FamilyWishlists } from "@/components/family/FamilyWishlists";
 import { getTranslations } from "next-intl/server";
 
 export default async function FamilyPage() {
-  const families = await getMyFamilies();
-  const t = await getTranslations("family");
-  const session = await auth();
+  const [families, t, session, flow, management] = await Promise.all([
+    getMyFamilies(),
+    getTranslations("family"),
+    auth(),
+    getTranslations("dailyFlow"),
+    getTranslations("familyManagement"),
+  ]);
 
   return (
     <div className={styles.container}>
@@ -31,7 +36,14 @@ export default async function FamilyPage() {
           {families.length === 0 ? (
             <Card className={styles.emptyCard}>
               <CardContent className={styles.emptyContent}>
+                <div className="empty-art">
+                  <OccasionIcon kind="people" />
+                </div>
                 <p>{t("noFamily")}</p>
+                <p>{flow("emptyFamily")}</p>
+                <a className="primary-link" href="#create-family-form">
+                  {t("createFamily")}
+                </a>
               </CardContent>
             </Card>
           ) : (
@@ -78,20 +90,26 @@ export default async function FamilyPage() {
                       member.userId === session?.user?.id &&
                       member.role === "ADMIN",
                   ) && (
-                    <div className="stack">
-                      <InviteMemberForm familyId={family.id} />
-                      <PendingInvitations familyId={family.id} />
-                    </div>
+                    <details className="form-options">
+                      <summary>{t("invite")}</summary>
+                      <div className="stack">
+                        <InviteMemberForm familyId={family.id} />
+                        <PendingInvitations familyId={family.id} />
+                      </div>
+                    </details>
                   )}
 
                   <FamilyWishlists familyId={family.id} />
                   {session?.user?.id && (
-                    <MemberManagement
-                      familyId={family.id}
-                      ownerId={family.ownerId}
-                      userId={session.user.id}
-                      members={family.members}
-                    />
+                    <details className="form-options">
+                      <summary>{management("title")}</summary>
+                      <MemberManagement
+                        familyId={family.id}
+                        ownerId={family.ownerId}
+                        userId={session.user.id}
+                        members={family.members}
+                      />
+                    </details>
                   )}
                 </CardContent>
               </Card>
@@ -100,7 +118,13 @@ export default async function FamilyPage() {
         </div>
 
         <div className={styles.sideContent}>
-          <CreateFamilyForm />
+          <details
+            className="form-options creation-panel"
+            open={!families.length}
+          >
+            <summary>{t("createFamily")}</summary>
+            <CreateFamilyForm showTitle={false} />
+          </details>
         </div>
       </div>
     </div>

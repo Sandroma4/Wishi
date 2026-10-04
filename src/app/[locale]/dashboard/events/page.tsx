@@ -1,7 +1,8 @@
+import { EventDate } from "@/components/events/EventDate";
+import { OccasionIcon } from "@/components/ui/OccasionIcon";
 import styles from "./page.module.css";
 import { Link } from "@/i18n/routing";
-import { getEvents } from "@/app/actions/event";
-import { getMyFamilies } from "@/app/actions/family";
+import { getEvents, getEventFamilies } from "@/app/actions/event";
 import {
   Card,
   CardHeader,
@@ -18,15 +19,21 @@ export default async function EventsPage({
   searchParams: Promise<{ period?: string }>;
 }) {
   const past = (await searchParams).period === "past";
-  const events = await getEvents(past);
-  const families = await getMyFamilies();
-  const t = await getTranslations("events");
-  const locale = await getLocale();
+  const [events, families, t, locale, flow] = await Promise.all([
+    getEvents(past),
+    getEventFamilies(),
+    getTranslations("events"),
+    getLocale(),
+    getTranslations("dailyFlow"),
+  ]);
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>{t("title")}</h1>
+        <div>
+          <h1 className={styles.title}>{t("title")}</h1>
+          <p className="page-intro">{t("visualIntro")}</p>
+        </div>
       </header>
       <nav className="button-row" aria-label={t("period")}>
         <Link
@@ -48,14 +55,42 @@ export default async function EventsPage({
           {events.length === 0 ? (
             <Card className={styles.emptyCard}>
               <CardContent className={styles.emptyContent}>
+                <div className="empty-art">
+                  <OccasionIcon kind="calendar" />
+                </div>
                 <p>{t("empty")}</p>
+                <p>
+                  {flow(
+                    past
+                      ? "noPastEvents"
+                      : families.length
+                        ? "emptyEvents"
+                        : "familyFirst",
+                  )}
+                </p>
+                {!past &&
+                  (families.length ? (
+                    <a className="primary-link" href="#create-event-form">
+                      {t("createEvent")}
+                    </a>
+                  ) : (
+                    <Link className="primary-link" href="/dashboard/family">
+                      {flow("createFamily")}
+                    </Link>
+                  ))}
               </CardContent>
             </Card>
           ) : (
             events.map((event) => (
               <Card key={event.id} className={styles.eventCard}>
                 <CardHeader>
-                  <CardTitle>{event.name}</CardTitle>
+                  <div className="event-heading">
+                    <EventDate date={event.date} locale={locale} />
+                    <div className="stack">
+                      <CardTitle>{event.name}</CardTitle>
+                      <span className="visual-badge">{event.family.name}</span>
+                    </div>
+                  </div>
                   <CardDescription>
                     {new Intl.DateTimeFormat(locale, {
                       dateStyle: "long",
@@ -78,7 +113,15 @@ export default async function EventsPage({
         </div>
 
         <div className={styles.sideContent}>
-          <CreateEventForm families={families} />
+          {families.length > 0 && (
+            <details
+              className="form-options creation-panel"
+              open={!events.length && !past}
+            >
+              <summary>{t("createEvent")}</summary>
+              <CreateEventForm families={families} showTitle={false} />
+            </details>
+          )}
         </div>
       </div>
     </div>

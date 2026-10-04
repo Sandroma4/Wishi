@@ -23,7 +23,8 @@ export async function FamilyWishlists({ familyId }: { familyId: string }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+          gridTemplateColumns:
+            "repeat(auto-fill, minmax(min(250px, 100%), 1fr))",
           gap: "1rem",
         }}
       >

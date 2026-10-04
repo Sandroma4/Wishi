@@ -18,6 +18,14 @@ export async function getEvents(includePast = false) {
     orderBy: { date: includePast ? "desc" : "asc" },
   });
 }
+export async function getEventFamilies() {
+  const session = await auth();
+  if (!session?.user?.id) return [];
+  return prisma.family.findMany({
+    where: { members: { some: { userId: session.user.id } } },
+    select: { id: true, name: true },
+  });
+}
 export async function getEvent(id: string) {
   const session = await auth();
   return session?.user?.id ? readEvent(prisma, id, session.user.id) : null;

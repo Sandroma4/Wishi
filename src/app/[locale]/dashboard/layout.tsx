@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import styles from "./layout.module.css";
 import { Link } from "@/i18n/routing";
 import { redirect } from "next/navigation";
@@ -6,10 +8,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import { SignOutButton } from "@/components/auth/SignOutButton";
-import {
-  DashboardNavigation,
-  DashboardPageTitle,
-} from "@/components/dashboard/DashboardNavigation";
+import { DashboardNavigation } from "@/components/dashboard/DashboardNavigation";
 export default async function DashboardLayout({
   children,
   params,
@@ -26,6 +25,8 @@ export default async function DashboardLayout({
   });
   if (!user) redirect("/" + locale + "/login");
   const t = await getTranslations("dashboard");
+  const choice = (await cookies()).get("wishi-theme")?.value;
+  const theme = choice === "light" || choice === "dark" ? choice : "system";
   return (
     <div className={styles.dashboard}>
       <aside className={styles.sidebar}>
@@ -33,6 +34,16 @@ export default async function DashboardLayout({
           <h2>Wishi</h2>
         </div>
         <DashboardNavigation />
+        <details className={styles.settings}>
+          <summary>{t("displaySettings")}</summary>
+          <div className={styles.settingsPanel}>
+            <Link href="/dashboard/profile">{t("myProfile")}</Link>
+            <LanguageSwitcher />
+            <ThemeSwitcher initial={theme} />
+            <Link href="/dashboard/feedback">{t("navFeedback")}</Link>
+            <SignOutButton />
+          </div>
+        </details>
         <Link href="/dashboard/profile" className={styles.profile}>
           <div className={styles.avatar}>
             {user.name?.[0]?.toUpperCase() || "U"}
@@ -41,16 +52,6 @@ export default async function DashboardLayout({
         </Link>
       </aside>
       <main className={styles.main}>
-        <header className={styles.header}>
-          <DashboardPageTitle />
-          <div className={styles.actions}>
-            <Link href="/dashboard/profile" className={styles.profileShortcut}>
-              {t("myProfile")}
-            </Link>
-            <LanguageSwitcher />
-            <SignOutButton />
-          </div>
-        </header>
         <div className={styles.content}>{children}</div>
       </main>
     </div>

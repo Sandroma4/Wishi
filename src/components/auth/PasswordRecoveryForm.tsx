@@ -1,4 +1,5 @@
 "use client";
+import { PreservedForm } from "@/components/ui/PreservedForm";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
@@ -39,7 +40,7 @@ export function PasswordRecoveryForm({
     }
   }
   return (
-    <main className="public-container">
+    <main className="public-container auth-container">
       <Card>
         <CardContent>
           <div className="stack">
@@ -52,7 +53,11 @@ export function PasswordRecoveryForm({
             ) : success ? (
               <p role="status">{t(token ? "resetSuccess" : "sent")}</p>
             ) : (
-              <form action={submit} className="stack" aria-busy={pending}>
+              <PreservedForm
+                action={submit}
+                className="stack"
+                aria-busy={pending}
+              >
                 {error && <p role="alert">{error}</p>}
                 {token ? (
                   <>
@@ -96,7 +101,7 @@ export function PasswordRecoveryForm({
                 <Button disabled={pending}>
                   {t(pending ? "pending" : token ? "reset" : "send")}
                 </Button>
-              </form>
+              </PreservedForm>
             )}
             <Link href="/login">{a("signIn")}</Link>
           </div>

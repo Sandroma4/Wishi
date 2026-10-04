@@ -15,7 +15,7 @@ export default async function FeedbackPage() {
     select: { id: true, message: true, status: true, createdAt: true },
   });
   return (
-    <div className="stack">
+    <div className="stack focused-page">
       <h1>{t("title")}</h1>
       <p>{t("intro")}</p>
       <FeedbackForm />

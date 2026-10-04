@@ -19,7 +19,7 @@
 
 .emptyCard {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 1.75rem 1.25rem;
 }
 
 .emptyContent {
@@ -27,7 +27,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
 }
 
 .createBtn {
@@ -36,7 +36,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 1.5rem;
 }
 

@@ -1,3 +1,5 @@
+import { EventDate } from "@/components/events/EventDate";
+import { OccasionIcon } from "@/components/ui/OccasionIcon";
 import { getEvent } from "@/app/actions/event";
 import { getLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -16,10 +18,14 @@ export default async function EventPage({
     w = await getTranslations("wishlist"),
     c = await getTranslations("common");
   const locale = await getLocale();
+  const flow = await getTranslations("dailyFlow");
   return (
     <div className="stack">
       <Link href="/dashboard/events">{t("back")}</Link>
-      <h1>{event.name}</h1>
+      <div className="event-heading">
+        <EventDate date={event.date} locale={locale} />
+        <h1>{event.name}</h1>
+      </div>
       <p>
         {new Intl.DateTimeFormat(locale, {
           dateStyle: "long",
@@ -29,7 +35,22 @@ export default async function EventPage({
       </p>
       {event.description && <p>{event.description}</p>}
       <h2>{t("wishlists")}</h2>
-      {!event.wishlists.length && <p>{t("noWishlists")}</p>}
+      <p>{flow("eventListsHelp")}</p>
+      <Link
+        className="primary-link"
+        href={{
+          pathname: "/dashboard/wishlists/create",
+          query: { eventId: id },
+        }}
+      >
+        {flow("createEventList")}
+      </Link>
+      {!event.wishlists.length && (
+        <div className="empty-state">
+          <OccasionIcon />
+          <p>{t("noWishlists")}</p>
+        </div>
+      )}
       <div className="gift-grid">
         {event.wishlists.map((list) => (
           <Card key={list.id}>

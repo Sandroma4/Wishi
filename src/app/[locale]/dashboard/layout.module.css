@@ -2,15 +2,17 @@
 .dashboard {
   display: flex;
   flex-direction: row;
-  height: 100svh;
-  width: 100vw;
-  overflow: hidden;
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  width: 100%;
+  overflow: clip;
   background-color: var(--background);
 }
 
 /* Sidebar - Desktop */
 .sidebar {
-  width: clamp(240px, 20vw, 300px);
+  width: 216px;
   background-color: var(--card);
   border-right: 1px solid var(--border);
   display: flex;
@@ -35,7 +37,9 @@
   display: flex;
   flex-direction: column;
   gap: clamp(0.25rem, 1vh, 0.5rem);
-  flex-grow: 1;
+  flex: 1 1 0;
+  min-height: 0;
+  overscroll-behavior-y: contain;
   overflow-y: auto;
 }
 
@@ -101,22 +105,25 @@
 
 /* Main Content Area */
 .main {
-  flex-grow: 1;
+  flex: 1 1 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   min-width: 0; /* Prevents flex items from overflowing */
   background-color: var(--background);
-  height: 100svh;
+  height: 100%;
 }
 
 .header {
-  height: clamp(60px, 8vh, 80px);
+  min-height: 64px;
+  height: auto;
   background-color: var(--background);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 clamp(1rem, 4vw, 2.5rem);
+  justify-content: flex-end;
+  padding: 0.5rem clamp(1rem, 2.5vw, 2rem);
+  gap: 1rem;
   flex-shrink: 0;
   backdrop-filter: blur(8px);
   position: sticky;
@@ -140,7 +147,8 @@
 }
 
 .content {
-  padding: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(1rem, 2.5vw, 2rem);
+  scrollbar-gutter: stable;
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -159,10 +167,10 @@
   /* Transform Sidebar into Bottom Navigation Bar */
   .sidebar {
     width: 100%;
-    height: calc(70px + env(safe-area-inset-bottom));
+    height: calc(64px + env(safe-area-inset-bottom));
     padding-bottom: env(safe-area-inset-bottom);
     flex-direction: row;
-    padding: 0;
+    padding: 0 0 env(safe-area-inset-bottom);
     border-right: none;
     border-top: 1px solid var(--border);
     position: fixed;
@@ -212,7 +220,8 @@
 
   .main {
     /* Push content up to avoid bottom bar overlap */
-    height: calc(100svh - 70px - env(safe-area-inset-bottom));
+    flex: none;
+    height: calc(100% - 64px - env(safe-area-inset-bottom));
   }
 
   .header {
@@ -246,14 +255,129 @@
   .header {
     height: auto;
     min-height: 60px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
   }
   .actions {
-    flex-wrap: wrap;
+    gap: 0.25rem;
   }
   .navItem {
     font-size: 0.68rem;
+  }
+}
+
+.content > * {
+  width: 100%;
+  max-width: var(--page-width, 1280px);
+  margin-inline: auto;
+  flex-shrink: 0;
+}
+.settings {
+  position: relative;
+}
+.settings > summary {
+  padding: 0.5rem 0.75rem;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+}
+.settings > summary::after {
+  content: "⌄";
+  margin-left: 0.5rem;
+}
+.settingsPanel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  width: min(300px, calc(100vw - 2rem));
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+.settingsPanel > a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.navLabel {
+  min-width: 0;
+}
+@media (max-width: 768px) {
+  .mobileAuxiliary {
+    display: none;
+  }
+  .navItem {
+    padding: 0.35rem 0.15rem;
+  }
+  .navLabel {
+    font-size: 0.7rem;
+    line-height: 1.2;
+  }
+  .header {
+    min-height: 60px;
+  }
+  .pageTitle {
+    font-size: 1rem;
+    flex: 1;
+    min-width: 0;
+  }
+  .profileShortcut {
+    font-size: 0.8rem;
+  }
+}
+.settingsPanel {
+  max-height: calc(100svh - 140px);
+  overflow-y: auto;
+}
+
+/* Account controls share the navigation instead of reserving a header row. */
+.settings {
+  margin-block: 0.75rem;
+  flex-shrink: 0;
+  z-index: 60;
+}
+.settingsPanel {
+  top: auto;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  right: auto;
+}
+@media (max-width: 768px) {
+  .nav {
+    flex: 1;
+    min-width: 0;
+  }
+  .settings {
+    position: static;
+    margin: 0;
+    flex: 0 0 54px;
+  }
+  .settings > summary {
+    padding: 0.25rem;
+    min-height: 48px;
+    border: 0;
+    border-radius: 0;
+    font-size: 0.65rem;
+    justify-content: center;
+  }
+  .settings > summary::after {
+    display: none;
+  }
+  .settingsPanel {
+    position: fixed;
+    left: auto;
+    right: 0.5rem;
+    bottom: calc(72px + env(safe-area-inset-bottom));
+    top: auto;
+    max-height: calc(100dvh - 96px);
   }
 }

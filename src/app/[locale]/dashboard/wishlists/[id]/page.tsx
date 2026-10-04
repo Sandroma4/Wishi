@@ -1,3 +1,5 @@
+import { ListSectionNavigation } from "@/components/wishlist/ListSectionNavigation";
+import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { getWishlistById } from "@/app/actions/wishlist";
@@ -11,12 +13,19 @@ import { getTrashedGifts } from "@/app/actions/item";
 import { GiftTrash } from "@/components/wishlist/GiftTrash";
 export default async function WishlistDetailsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string }>;
 }) {
   const { id } = await params;
   const wishlist = await getWishlistById(id);
   if (!wishlist) notFound();
+  const nav = await getTranslations("listNavigation");
+  const from = (await searchParams).from;
+  const back = wishlist.isOwner
+    ? "/dashboard/wishlists" + (from === "archived" ? "?view=archived" : "")
+    : "/dashboard/family";
   const events = wishlist.isOwner ? await getEvents() : [];
   if (
     wishlist.isOwner &&
@@ -42,21 +51,40 @@ export default async function WishlistDetailsPage({
     : null;
   return (
     <div className="stack">
+      <Link className="list-back" href={back}>
+        ← {nav(wishlist.isOwner ? "back" : "backFamily")}
+      </Link>
+      <ListSectionNavigation
+        editable={wishlist.canEdit}
+        owner={wishlist.isOwner}
+      />
       <WishlistView wishlist={wishlist} loggedIn />
-      {wishlist.canEdit && <GiftTrash gifts={await getTrashedGifts(id)} />}
+
       {wishlist.isOwner && (
-        <ListLifecycle
-          id={id}
-          name={wishlist.name}
-          state={wishlist.archivedAt ? "archived" : "active"}
-        />
+        <details id="list-manage" className="form-options">
+          <summary>{nav("manage")}</summary>
+          <ListLifecycle
+            id={id}
+            name={wishlist.name}
+            state={wishlist.archivedAt ? "archived" : "active"}
+          />
+        </details>
       )}
       {wishlist.archivedAt && (
         <p>{(await getTranslations("listLifecycle"))("archiveHelp")}</p>
       )}
       {wishlist.canEdit && (
-        <details>
-          <summary>{(await getTranslations("common"))("edit")}</summary>
+        <section id="list-share">
+          <WishlistManager
+            id={id}
+            visibility={wishlist.visibility}
+            token={token}
+          />
+        </section>
+      )}
+      {wishlist.canEdit && (
+        <details id="list-settings" className="form-options">
+          <summary>{nav("settings")}</summary>
           <div className="stack">
             <WishlistForm
               key={JSON.stringify([
@@ -71,14 +99,10 @@ export default async function WishlistDetailsPage({
               events={events}
               initial={wishlist}
             />
-            <WishlistManager
-              id={id}
-              visibility={wishlist.visibility}
-              token={token}
-            />
           </div>
         </details>
       )}
+      {wishlist.canEdit && <GiftTrash gifts={await getTrashedGifts(id)} />}
     </div>
   );
 }

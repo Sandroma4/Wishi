@@ -13,7 +13,7 @@ export default async function ProfilePage() {
   });
   if (!user) notFound();
   return (
-    <div className="stack">
+    <div className="stack focused-page">
       <ProfileForm
         key={JSON.stringify(user)}
         name={user.name || ""}

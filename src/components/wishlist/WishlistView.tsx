@@ -1,9 +1,10 @@
+import { OccasionIcon } from "@/components/ui/OccasionIcon";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { readWishlist } from "@/lib/wishlist-service";
 import { AddItemForm } from "./AddItemForm";
 import { ReserveButton } from "./ReserveButton";
-import { GiftDetails } from "./GiftDetails";
+import { GiftDetails, GiftImage } from "./GiftDetails";
 import { GiftBrowser } from "./GiftBrowser";
 import { ContributionForm } from "./ContributionForm";
 import {
@@ -24,9 +25,10 @@ export async function WishlistView({
 }) {
   const t = await getTranslations("wishlist");
   const c = await getTranslations("common");
+  const flow = await getTranslations("dailyFlow");
   const locale = await getLocale();
   return (
-    <div className="stack">
+    <div className="stack" id="list-gifts">
       <header>
         <h1>{wishlist.name}</h1>
         <p>{t("byOwner", { name: wishlist.owner.name || c("unknown") })}</p>
@@ -60,34 +62,48 @@ export async function WishlistView({
           {wishlist.canEdit && <AddItemForm wishlistId={wishlist.id} />}
         </>
       )}
-      {!wishlist.items.length && <p>{t("noItems")}</p>}
+      {!wishlist.items.length && (
+        <div className="empty-state">
+          <div className="empty-art">
+            <OccasionIcon />
+          </div>
+          <p>{t("noItems")}</p>
+          <p>
+            {flow(wishlist.canEdit ? "emptyGiftsOwner" : "emptyGiftsVisitor")}
+          </p>
+        </div>
+      )}
       {wishlist.items.length > 0 && (
         <GiftBrowser
           owner={wishlist.isOwner}
           gifts={wishlist.items.map((item) => ({
             ...item,
             card: (
-              <Card key={item.id}>
+              <Card key={item.id} className="gift-card">
+                <GiftImage gift={item} token={token} />
                 <CardHeader>
                   <CardTitle>{item.title}</CardTitle>
-                  {item.isGroupGift && <p>{t("groupGift")}</p>}
-                  <p>
+                  {item.isGroupGift && (
+                    <p className="visual-badge">{t("groupGift")}</p>
+                  )}
+                  <p className="gift-price">
                     {item.priceCents !== null
                       ? new Intl.NumberFormat(locale, {
                           style: "currency",
                           currency: item.currency || "EUR",
                         }).format(item.priceCents / 100)
                       : ""}{" "}
-                    ·{" "}
-                    {t(
-                      "priority" +
-                        item.priority[0] +
-                        item.priority.slice(1).toLowerCase(),
-                    )}
+                    <span className="visual-badge">
+                      {t(
+                        "priority" +
+                          item.priority[0] +
+                          item.priority.slice(1).toLowerCase(),
+                      )}
+                    </span>
                   </p>
                 </CardHeader>
                 <CardContent>
-                  <GiftDetails gift={item} token={token} />
+                  <GiftDetails gift={item} token={token} showImage={false} />
                   {item.description && <p>{item.description}</p>}
                   {item.url &&
                     (item.url.startsWith("https://") ||

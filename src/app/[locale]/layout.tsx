@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -24,9 +25,11 @@ export default async function RootLayout({
   }
 
   const messages = await getMessages();
+  const choice = (await cookies()).get("wishi-theme")?.value;
+  const theme = choice === "light" || choice === "dark" ? choice : "system";
 
   return (
-    <html lang={locale}>
+    <html lang={locale} data-theme={theme}>
       <body
         style={{
           fontFamily: 'system-ui, -apple-system, "Segoe UI", sans-serif',

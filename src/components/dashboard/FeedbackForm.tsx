@@ -1,4 +1,5 @@
 "use client";
+import { PreservedForm } from "@/components/ui/PreservedForm";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { sendFeedback } from "@/app/actions/feedback";
@@ -10,7 +11,7 @@ export function FeedbackForm() {
   const [pending, setPending] = useState(false),
     [message, setMessage] = useState("");
   return (
-    <form
+    <PreservedForm
       ref={ref}
       className="stack"
       aria-busy={pending}
@@ -53,6 +54,6 @@ export function FeedbackForm() {
       <p id="feedback-help">{t("help")}</p>
       <Button disabled={pending}>{t(pending ? "sending" : "send")}</Button>
       <p role="status">{message}</p>
-    </form>
+    </PreservedForm>
   );
 }
