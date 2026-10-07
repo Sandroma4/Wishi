@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getPublicWishlist } from "@/app/actions/wishlist";
 import { auth } from "@/auth";
 import { WishlistView } from "@/components/wishlist/WishlistView";
+import { PublicListHeader } from "@/components/wishlist/PublicListHeader";
 export default async function PublicListPage({
   params,
 }: {
@@ -13,6 +14,7 @@ export default async function PublicListPage({
   const session = await auth();
   return (
     <main className="public-container">
+      <PublicListHeader />
       <WishlistView wishlist={list} loggedIn={Boolean(session?.user?.id)} />
     </main>
   );

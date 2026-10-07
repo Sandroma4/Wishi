@@ -22,6 +22,11 @@ export const registrationSchema = credentialsSchema.extend({
   password: passwordSchema,
 });
 export const wishlistSchema = z.object({
+  recipientId: z
+    .string()
+    .max(100)
+    .optional()
+    .transform((v) => v || null),
   occasion: z
     .string()
     .trim()
@@ -48,6 +53,34 @@ export const wishlistSchema = z.object({
     .transform((value) => value || null),
 });
 export const itemSchema = z.object({
+  alternativeUrls: z
+    .string()
+    .max(10240)
+    .default("")
+    .transform((v) =>
+      v
+        .split(/\r?\n/)
+        .map((s) => s.trim())
+        .filter(Boolean),
+    )
+    .refine(
+      (v) =>
+        v.length <= 5 &&
+        v.every((s) => {
+          try {
+            const u = new URL(s);
+            return (
+              s.length <= 2048 &&
+              ["http:", "https:"].includes(u.protocol) &&
+              !u.username &&
+              !u.password
+            );
+          } catch {
+            return false;
+          }
+        }),
+    )
+    .transform((v) => [...new Set(v)].join("\n")),
   isGroupGift: z
     .enum(["on", "off"])
     .optional()

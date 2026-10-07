@@ -25,6 +25,38 @@ export default async function Home() {
           {t("signIn")}
         </Link>
       </section>
+      <section className={styles.benefits} aria-label={t("benefits")}>
+        {["wishes", "duplicates", "surprise"].map((key) => (
+          <article key={key}>
+            <h2>{t(key + "Title")}</h2>
+            <p>{t(key + "Help")}</p>
+          </article>
+        ))}
+      </section>
+      <section className={styles.example} aria-labelledby="example-title">
+        <div>
+          <span className={styles.badge}>{t("exampleBadge")}</span>
+          <h2 id="example-title">{t("exampleTitle")}</h2>
+          <p>{t("exampleHelp")}</p>
+        </div>
+        <ul>
+          {["book", "headphones", "weekend"].map((key) => (
+            <li key={key}>
+              <OccasionIcon kind="gift" />
+              <span>{t("example" + key)}</span>
+              <span className={styles.badge}>
+                {t(
+                  key === "book"
+                    ? "available"
+                    : key === "headphones"
+                      ? "reserved"
+                      : "group",
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
     </main>
   );
 }

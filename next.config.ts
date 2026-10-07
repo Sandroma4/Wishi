@@ -5,10 +5,15 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  allowedDevOrigins: Object.values(networkInterfaces())
-    .flatMap((addresses) => addresses ?? [])
-    .filter((address) => address.family === "IPv4" && !address.internal)
-    .map((address) => address.address),
+  devIndicators: false as const,
+  distDir: process.env.CADEOLY_E2E === "true" ? ".next-e2e" : ".next",
+  allowedDevOrigins: [
+    "127.0.0.1",
+    ...Object.values(networkInterfaces())
+      .flatMap((addresses) => addresses ?? [])
+      .filter((address) => address.family === "IPv4" && !address.internal)
+      .map((address) => address.address),
+  ],
   async headers() {
     return [
       {

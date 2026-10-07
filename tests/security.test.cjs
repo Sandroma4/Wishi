@@ -50,6 +50,7 @@ for (const folder of [
   "202610030005_accounts_families_list_lifecycle",
   "202610030006_gift_trash",
   "20261004110000_group_gifts_and_feedback",
+  "202610070001_convenience",
 ])
   db.exec(
     fs.readFileSync(

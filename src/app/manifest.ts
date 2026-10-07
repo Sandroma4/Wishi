@@ -8,6 +8,11 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Les envies de chacun, le plaisir d’offrir ensemble.",
     start_url: "/",
     scope: "/",
+    share_target: {
+      action: "/fr/quick-add",
+      method: "GET",
+      params: { title: "title", text: "text", url: "url" },
+    },
     display: "standalone",
     background_color: "#faf8f5",
     theme_color: "#6543be",

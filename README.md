@@ -25,6 +25,7 @@ Node.js 24 ou supérieur et npm sont nécessaires (les tests utilisent SQLite in
 - `npm run lint` : règles de qualité.
 - `npm run typecheck` : vérification des types.
 - `npm test` : tests sur une base SQLite temporaire indépendante (accès, confidentialité, réservation concurrente, invitations, validation, conversion des prix).
+- `npx playwright install chromium` puis `npm run test:e2e` : parcours navigateur français/anglais sur ordinateur et mobile (inscription avec connexion automatique, création, partage, réservation et annulation, surprise du propriétaire). Le serveur de production utilise le port 3107, une base temporaire et `.next-e2e`, sans utiliser les données locales. Les traces d’échec restent dans `test-results` et peuvent contenir des liens privés de test.
 - `npm run build` puis `npm start` : compilation et serveur de production.
 
 ## Règles de partage
@@ -145,3 +146,25 @@ Les cadeaux groupés sont choisis lors de la création avec un prix en EUR. Les 
 Le formulaire lit, à la demande du propriétaire, les métadonnées publiques d’un lien HTTPS et propose le titre, le prix déclaré en EUR et une photo. Les champs déjà remplis sont conservés, les informations restent modifiables et rien n’est enregistré avant validation. Les liens internes, ports non standards et identifiants dans les URL sont refusés ; les destinations DNS sont vérifiées et fixées pour chaque requête, y compris après redirection. Les réponses et images sont bornées ; les images sont converties avant utilisation. Les marchands qui bloquent les requêtes ou ne fournissent pas ces métadonnées nécessitent une saisie manuelle. Aucun prix en devise étrangère n’est converti implicitement.
 
 Les listes disposent de raccourcis pour les indispensables et, pour les visiteurs seulement, les cadeaux disponibles. Les invitations en attente expliquent le partage manuel et peuvent être renouvelées pour sept jours : l’ancien lien est invalidé. Aucun email d’invitation n’est envoyé automatiquement.
+
+## Ajout rapide et confort d’utilisation
+
+« Ajout rapide » conserve le lien partagé pendant la connexion et la création d’une première liste. L’application web installée déclare une cible de partage de liens ; sa disponibilité dépend du navigateur et du système. La saisie par collage reste disponible. Les formulaires de liste et de cadeau conservent un brouillon local pendant sept jours, séparé par compte. Les mots de passe et fichiers photo ne sont pas stockés ; une déconnexion efface les brouillons.
+
+Trois modèles préremplissent le nom et l’occasion (anniversaire, Noël, naissance). Des destinataires peuvent être ajoutés dans le profil et associés aux listes. Un cadeau accepte jusqu’à cinq liens marchands supplémentaires. L’aperçu propriétaire affiche la présentation des cadeaux avec des statuts neutres, sans réservation, participation ni bouton de modification.
+
+« Quoi offrir ? » rassemble jusqu’à 500 cadeaux disponibles des autres membres de la famille, filtrables par destinataire, événement et budget. Les listes privées, accessibles uniquement par lien, archivées et supprimées sont exclues, comme les cadeaux réservés ou entièrement financés. Le profil propose un export JSON des listes personnelles, avec les photos encodées en base64, sans jeton de partage ni données de réservation. Il s’agit d’un export personnel, distinct des sauvegardes complètes de l’opérateur.
+
+La migration `202610070001_convenience` ajoute les destinataires et liens supplémentaires ; appliquer `npm run db:migrate` avant de lancer une version mise à jour sur une base existante. Les tests navigateur utilisent leur propre base et leurs propres photos, sans modifier les données réelles.
+
+## Restauration, rappels et navigation
+
+Le profil permet de renommer, fusionner et supprimer un destinataire. Une fusion réattribue ses listes ; une suppression les conserve sans destinataire. Chaque opération reste limitée au propriétaire du profil et demande une confirmation pour la fusion ou la suppression.
+
+L’import personnel accepte les exports JSON version 1 jusqu’à 20 Mo, 100 listes et 2 000 cadeaux. Un aperçu précède la création de copies privées, avec photos réencodées, destinataires et états d’archivage/corbeille conservés. Il ne modifie aucun compte, liste existante, événement ou famille et ne restaure aucun jeton de partage, réservation ou participation. Un échec annule les créations et nettoie les nouvelles photos. Les exports trop volumineux restent utilisables pour consultation ; leur restauration nécessite une sauvegarde opérateur ou un découpage du JSON.
+
+L’accueil affiche les événements familiaux des 14 prochains jours et jusqu’à 12 cadeaux réservés par l’utilisateur, selon ses droits d’accès. Il suggère aussi de compléter jusqu’à trois listes vides ou de relire celles dont la date souhaitée approche. Ces rappels sont internes à l’application, sans notification système ni email automatique. Les cadeaux sans date apparaissent dans la liste de préparation ; les liens révoqués ne révèlent aucune information du cadeau.
+
+Les cadeaux et suggestions sont affichés par pages de 24, après application des filtres à l’ensemble chargé ; les suggestions restent bornées à 500. Le propriétaire peut contrôler les liens d’un cadeau à la demande : une réponse 404/410 indique un lien introuvable, un blocage marchand ou une panne reste indéterminé. Aucun contrôle automatique périodique n’est lancé.
+
+La navigation au clavier dispose d’un accès direct au contenu du tableau de bord et d’un focus visible renforcé. Les messages d’erreur utilisent une couleur adaptée aux thèmes clair/sombre ; les commandes et champs tactiles ont une hauteur minimale de 44 pixels.

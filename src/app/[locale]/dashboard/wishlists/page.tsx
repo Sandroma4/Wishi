@@ -36,13 +36,18 @@ export default async function WishlistsPage({
     <div className={`${styles.container} wishlist-page`}>
       <div className={styles.header}>
         <h1>{t("myWishlists")}</h1>
-        <Link className="primary-link" href="/dashboard/wishlists/create">
-          {t("newWishlist")}
-        </Link>
+        {(wishlists.length > 0 || view !== "active") && (
+          <Link className="primary-link" href="/dashboard/wishlists/create">
+            {t("newWishlist")}
+          </Link>
+        )}
       </div>
 
       {wishlists.length === 0 && (
-        <nav className="button-row" aria-label={lifecycle("views")}>
+        <nav
+          className="button-row segmented-filters"
+          aria-label={lifecycle("views")}
+        >
           {(["active", "archived", "trash"] as const).map((state) => (
             <Link
               key={state}
@@ -69,6 +74,7 @@ export default async function WishlistsPage({
                 : nav(view === "trash" ? "emptyTrash" : "emptyArchive")}
             </p>
             <Link
+              className="primary-link"
               href={
                 view === "active"
                   ? "/dashboard/wishlists/create"
@@ -84,7 +90,10 @@ export default async function WishlistsPage({
       ) : (
         <ListBrowser
           filters={
-            <nav className="button-row" aria-label={lifecycle("views")}>
+            <nav
+              className="button-row segmented-filters"
+              aria-label={lifecycle("views")}
+            >
               {(["active", "archived", "trash"] as const).map((state) => (
                 <Link
                   key={state}
@@ -155,7 +164,7 @@ export default async function WishlistsPage({
           }))}
         />
       )}
-      <WishlistHelp />
+      <WishlistHelp open={view === "active" && wishlists.length === 0} />
     </div>
   );
 }

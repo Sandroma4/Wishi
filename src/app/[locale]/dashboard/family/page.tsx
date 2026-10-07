@@ -9,7 +9,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/Card";
-import { CreateFamilyForm } from "@/components/family/CreateFamilyForm";
+import { FamilyActions } from "@/components/family/FamilyActions";
 import { InviteMemberForm } from "@/components/family/InviteMemberForm";
 import { PendingInvitations } from "@/components/family/PendingInvitations";
 import { MemberManagement } from "@/components/family/MemberManagement";
@@ -29,12 +29,7 @@ export default async function FamilyPage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>{t("title")}</h1>
-        <details className={styles.createFamily}>
-          <summary className="primary-link">{t("createFamily")}</summary>
-          <div className={styles.createPanel}>
-            <CreateFamilyForm showTitle={false} />
-          </div>
-        </details>
+        {families.length > 0 && <FamilyActions join />}
       </header>
 
       <div className={styles.grid}>
@@ -47,6 +42,7 @@ export default async function FamilyPage() {
                 </div>
                 <p>{t("noFamily")}</p>
                 <p>{flow("emptyFamily")}</p>
+                <FamilyActions join />
               </CardContent>
             </Card>
           ) : (

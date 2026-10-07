@@ -1,3 +1,17 @@
+.overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+.overview > :only-child {
+  grid-column: 1 / -1;
+}
+@media (max-width: 768px) {
+  .overview {
+    grid-template-columns: 1fr;
+  }
+}
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));

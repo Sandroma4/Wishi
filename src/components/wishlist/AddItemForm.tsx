@@ -3,7 +3,7 @@ import { PreservedForm } from "@/components/ui/PreservedForm";
 import { useEffect, useRef, useState } from "react";
 import { previewProduct } from "@/app/actions/product-preview";
 import { useRouter } from "@/i18n/routing";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import {
   createWishlistItem,
   updateWishlistItem,
@@ -24,18 +24,24 @@ type Gift = {
   color: string | null;
   model: string | null;
   isGroupGift?: boolean;
+  alternativeUrls?: string;
 };
 export function AddItemForm({
   wishlistId,
   item,
+  initialUrl = "",
+  initialTitle = "",
 }: {
   wishlistId: string;
   item?: Gift;
+  initialUrl?: string;
+  initialTitle?: string;
 }) {
   const t = useTranslations("wishlist");
+  const locale = useLocale();
   const flow = useTranslations("uiFlow");
   const [mode, setMode] = useState<"link" | "manual" | null>(
-    item ? "manual" : null,
+    item ? "manual" : initialUrl ? "link" : initialTitle ? "manual" : null,
   );
   const [preview, setPreview] = useState<Record<string, string> | null>(null);
   const [lastMode, setLastMode] = useState<"link" | "manual">("manual");
@@ -74,6 +80,7 @@ export function AddItemForm({
         if (!input.value && result[key]) input.value = result[key];
       }
       if (!item?.image && result.photo) setImportedPhoto(result.photo);
+      form.dispatchEvent(new Event("input", { bubbles: true }));
       setImportMessage(
         importText(
           result.title || result.price || result.photo ? "review" : "failed",
@@ -85,7 +92,7 @@ export function AddItemForm({
       setImporting(false);
     }
   }
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(Boolean(initialUrl || initialTitle));
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [localPhoto, setLocalPhoto] = useState("");
@@ -115,6 +122,7 @@ export function AddItemForm({
   }, [preview]);
   function cancel() {
     if (dirty && !window.confirm(flow("discardDraft"))) return;
+    formRef.current?.dispatchEvent(new Event("draft-clear"));
     setOpen(false);
     setPreview(null);
     setMode(item ? "manual" : null);
@@ -172,6 +180,7 @@ export function AddItemForm({
                 : [],
         );
       } else {
+        formRef.current?.dispatchEvent(new Event("draft-clear"));
         setLastMode(mode || "manual");
         setSuccess(flow("giftSaved"));
         setDirty(false);
@@ -245,7 +254,7 @@ export function AddItemForm({
       <Card className="gift-editor">
         <CardContent>
           <div ref={chooserRef} className="gift-choice-panel">
-            <h3>{t("addItem")}</h3>
+            <h2>{t("addItem")}</h2>
             <p>{flow("chooseMode")}</p>
             <div className="gift-mode-choices">
               <button
@@ -302,6 +311,11 @@ export function AddItemForm({
     <Card className="gift-editor">
       <CardContent>
         <PreservedForm
+          draftKey={`gift:${wishlistId}:${item?.id || "new"}`}
+          onDraftRestore={(values) => {
+            setDirty(true);
+            if (values.url) setMode("link");
+          }}
           ref={formRef}
           action={submit}
           className="stack gift-form"
@@ -316,8 +330,9 @@ export function AddItemForm({
           }}
           aria-busy={pending || importing}
         >
-          <h3>{t(item ? "editGift" : "addItem")}</h3>
+          <h2>{t(item ? "editGift" : "addItem")}</h2>
           <p className="form-hint">{flow("optionalHelp")}</p>
+          <p className="form-hint">{flow("draftHelp")}</p>
           <div
             className="button-row"
             role="group"
@@ -353,7 +368,7 @@ export function AddItemForm({
                 error={fieldError("url")}
                 type="url"
                 label={t("link")}
-                defaultValue={item?.url || ""}
+                defaultValue={item?.url || initialUrl}
                 maxLength={2048}
               />
               <Button
@@ -373,7 +388,7 @@ export function AddItemForm({
             name="title"
             error={fieldError("title")}
             label={flow("requiredName")}
-            defaultValue={item?.title}
+            defaultValue={item?.title || initialTitle}
             maxLength={120}
             required
           />
@@ -413,6 +428,19 @@ export function AddItemForm({
           <details className="form-options list-detail-options">
             <summary>{flow("optionalDetails")}</summary>
             <div className="stack">
+              <label htmlFor={prefix + "-alternatives"}>
+                {t("alternativeUrls")}
+              </label>
+              <textarea
+                id={prefix + "-alternatives"}
+                name="alternativeUrls"
+                rows={3}
+                maxLength={10240}
+                defaultValue={item?.alternativeUrls || ""}
+                  aria-invalid={fieldErrors.includes("alternativeUrls")}
+                aria-describedby={prefix + "-alternatives-help"}
+              />
+                <p id={prefix + "-alternatives-help"}>{fieldError("alternativeUrls") || t("alternativeHelp")}</p>
               <Input
                 id={prefix + "-description"}
                 name="description"
@@ -521,7 +549,11 @@ export function AddItemForm({
               {preview.description && <p>{preview.description}</p>}
               {preview.price && (
                 <p>
-                  {t("price")}: {preview.price} €
+                  {t("price")}:{" "}
+                  {new Intl.NumberFormat(locale, {
+                    style: "currency",
+                    currency: "EUR",
+                  }).format(Number(preview.price))}
                 </p>
               )}
               {preview.url && <p>{preview.url}</p>}

@@ -10,9 +10,15 @@ export function WishlistForm({
   events,
   initial,
   defaultEventId,
+  hasFamily = true,
+  recipients = [],
+  quickAdd,
 }: {
   events: { id: string; name: string }[];
   defaultEventId?: string;
+  hasFamily?: boolean;
+  recipients?: { id: string; name: string }[];
+  quickAdd?: { url: string; title: string };
   initial?: {
     id: string;
     name: string;
@@ -22,12 +28,15 @@ export function WishlistForm({
     occasion?: string | null;
     neededBy?: string | null;
     preferences?: string | null;
+    recipientId?: string | null;
   };
 }) {
   const t = useTranslations("wishlist");
   const flow = useTranslations("uiFlow");
   const help = useTranslations("usageHelp");
-  const [visibility, setVisibility] = useState(initial?.visibility || "FAMILY");
+  const [visibility, setVisibility] = useState(
+    initial?.visibility || (hasFamily ? "FAMILY" : "PRIVATE"),
+  );
   const [saved, setSaved] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<string[]>([]);
   const fieldError = (name: string) =>
@@ -51,9 +60,12 @@ export function WishlistForm({
         setError(errors(result.error));
         setFieldErrors("fields" in result ? result.fields || [] : []);
       } else {
+        document
+          .querySelector<HTMLFormElement>(".list-form")
+          ?.dispatchEvent(new Event("draft-clear"));
         setSaved(true);
         if ("wishlistId" in result)
-          router.push("/dashboard/wishlists/" + result.wishlistId);
+          router.push(quickAdd ? `/quick-add?${new URLSearchParams(quickAdd)}` : "/dashboard/wishlists/" + result.wishlistId);
         router.refresh();
       }
     } catch {
@@ -64,13 +76,58 @@ export function WishlistForm({
   }
   return (
     <PreservedForm
+      draftKey={`wishlist:${initial?.id || "new"}`}
+      onDraftRestore={(values) => {
+        if (["PRIVATE", "FAMILY", "LINK", "PUBLIC"].includes(values.visibility))
+          setVisibility(values.visibility);
+      }}
       action={submit}
       className="stack list-form"
       aria-busy={pending}
     >
-      <h2>{t(initial ? "editTitle" : "createTitle")}</h2>
+      {initial ? <h2>{t("editTitle")}</h2> : <h1>{t("createTitle")}</h1>}
       {error && <p role="alert">{error}</p>}
       {saved && <p role="status">{flow("listSaved")}</p>}
+      {!initial && (
+        <label>
+          {t("template")}
+          <select
+            onChange={(event) => {
+              const kind = event.target.value;
+              const form = event.currentTarget.form;
+              if (!form || !kind) return;
+              const name = form.elements.namedItem("name") as HTMLInputElement;
+              if (name.value && !window.confirm(t("replaceTemplate"))) return;
+              name.value = t("template" + kind);
+              const occasion = form.elements.namedItem(
+                "occasion",
+              ) as HTMLInputElement;
+              occasion.value = name.value;
+              form.dispatchEvent(new Event("input", { bubbles: true }));
+            }}
+            defaultValue=""
+          >
+            <option value="">{t("blankTemplate")}</option>
+            {["Birthday", "Christmas", "Birth"].map((kind) => (
+              <option key={kind} value={kind}>
+                {t("template" + kind)}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      <label>
+        {t("recipient")}
+        <select name="recipientId" defaultValue={initial?.recipientId || ""}>
+          <option value="">{t("myself")}</option>
+          {recipients.map((r) => (
+            <option key={r.id} value={r.id}>
+              {r.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      <p className="form-hint">{flow("draftHelp")}</p>
       <Input
         id="list-name"
         name="name"
@@ -95,6 +152,9 @@ export function WishlistForm({
         ))}
       </select>
       <p id="visibility-help">{help(visibility.toLowerCase() + "Help")}</p>
+      {!initial && !hasFamily && (
+        <p className="form-hint">{help("noFamilyHelp")}</p>
+      )}
       <details
         className="form-options"
         open={defaultEventId ? true : undefined}

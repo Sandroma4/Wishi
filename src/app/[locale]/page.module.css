@@ -2,10 +2,82 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100svh;
   padding: clamp(1rem, 4vw, 2rem);
   text-align: center;
+}
+.benefits {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  max-width: 1000px;
+  margin-top: 3rem;
+  text-align: left;
+}
+.benefits article {
+  padding: 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.benefits h2 {
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+.benefits p,
+.example p {
+  color: var(--muted-foreground);
+}
+.example {
+  max-width: 1000px;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  text-align: left;
+  border-radius: var(--radius);
+  background: var(--secondary);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.example h2 {
+  margin-block: 0.75rem;
+}
+.example ul {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+.example li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  background: var(--card);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+.example li svg {
+  width: 24px;
+  height: 24px;
+  color: var(--brand-foreground);
+}
+.badge {
+  font-size: 0.8rem;
+  color: var(--brand-foreground);
+  font-weight: 600;
+}
+@media (max-width: 768px) {
+  .benefits,
+  .example {
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 1rem;
+  }
+  .benefits {
+    margin-top: 2rem;
+  }
 }
 
 .header {

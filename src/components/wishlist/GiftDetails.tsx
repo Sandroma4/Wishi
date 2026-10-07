@@ -43,7 +43,7 @@ export function GiftImage({
   token?: string;
 }) {
   return (
-    <div className="gift-media">
+    <div className={`gift-media${gift.image ? "" : " gift-media-empty"}`}>
       {gift.image && /^[a-f0-9-]{36}\.webp$/.test(gift.image) ? (
         <Image
           unoptimized

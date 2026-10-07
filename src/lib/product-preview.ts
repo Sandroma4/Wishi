@@ -83,7 +83,7 @@ export async function readPublicResource(
               : ["image/jpeg", "image/png", "image/webp"].includes(type))
           ) {
             res.destroy();
-            reject(new Error("unsupported"));
+            reject(Object.assign(new Error("unsupported"), { status: res.statusCode }));
             return;
           }
           const chunks: Buffer[] = [];

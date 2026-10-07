@@ -1,3 +1,111 @@
+.google-entry { margin-bottom: 1rem; }
+.google-signin button { width: 100%; color: var(--foreground); border-color: var(--border); background: var(--card); }
+.auth-divider { text-align: center; color: var(--muted-foreground); font-size: 0.875rem; }
+.oauth-error { color: var(--destructive); margin-bottom: 1rem; }
+.family-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.family-dialog {
+  margin: auto;
+  width: min(520px, calc(100% - 2rem));
+  max-height: 85dvh;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: var(--shadow-lg);
+  text-align: left;
+}
+.family-dialog::backdrop {
+  background: rgb(0 0 0 / 0.5);
+}
+.dialog-heading {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.dialog-heading h2 {
+  font-size: 1.25rem;
+}
+.onboarding-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  background: var(--card);
+}
+.onboarding-panel summary {
+  cursor: pointer;
+  min-height: 44px;
+}
+.onboarding-panel summary span {
+  display: block;
+  margin-left: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+.onboarding-panel[open] > div {
+  margin-top: 1rem;
+}
+.onboarding-steps li + li {
+  margin-top: 1rem;
+}
+.onboarding-steps .secondary-link {
+  margin-top: 0.5rem;
+}
+nav.segmented-filters {
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--secondary);
+  border-radius: var(--radius);
+  align-self: flex-start;
+}
+nav.segmented-filters a {
+  border-color: transparent;
+  border-radius: calc(var(--radius) - 0.25rem);
+}
+nav.segmented-filters a[aria-current="page"],
+.wishlist-page nav.segmented-filters a[aria-current="page"] {
+  background: var(--card);
+  color: var(--brand-foreground);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.dashboard-actions a {
+  min-height: 44px;
+  border: 1px solid var(--primary);
+}
+@media (max-width: 768px) {
+  .reminder-empty .reminder-help,
+  .reminder-empty .reminder-list {
+    display: none;
+  }
+  .family-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  .family-actions > button {
+    width: 100%;
+  }
+  .family-dialog {
+    margin: auto 0 0;
+    width: 100%;
+    max-width: none;
+    max-height: 85dvh;
+    border-radius: 1.25rem 1.25rem 0 0;
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  }
+  .dashboard-actions > a {
+    flex: 1;
+    text-align: center;
+  }
+}
 :root {
   /* Light Theme */
   --background: #fcf9f5;
@@ -16,6 +124,7 @@
   --border: #e9e0d8;
   --radius: 1rem;
   --ring: rgba(79, 70, 229, 0.3);
+  --destructive: #b91c1c;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg:
@@ -30,7 +139,7 @@
   --card-foreground: #fafafa;
   --primary: #795bd3;
   --brand-foreground: #bda5ff;
-  --primary-hover: #886ddd;
+  --primary-hover: #7050c5;
   --secondary: #27272a;
   --secondary-foreground: #a1a1aa;
   --muted: #1f1f22;
@@ -39,6 +148,7 @@
   --accent-foreground: #e0e7ff;
   --border: #27272a;
   --ring: rgba(99, 102, 241, 0.4);
+  --destructive: #fca5a5;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
   --shadow-lg:
@@ -55,7 +165,7 @@
     --card-foreground: #fafafa;
     --primary: #795bd3;
     --brand-foreground: #bda5ff;
-    --primary-hover: #886ddd;
+    --primary-hover: #7050c5;
     --secondary: #27272a;
     --secondary-foreground: #a1a1aa;
     --muted: #1f1f22;
@@ -64,6 +174,7 @@
     --accent-foreground: #e0e7ff;
     --border: #27272a;
     --ring: rgba(99, 102, 241, 0.4);
+    --destructive: #fca5a5;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
     --shadow-md:
       0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
@@ -143,7 +254,7 @@ nav.button-row a {
   border-radius: var(--radius);
 }
 nav.button-row a[aria-current="page"] {
-  color: var(--primary);
+  color: var(--brand-foreground);
   background: var(--secondary);
   border-color: var(--primary);
   font-weight: 700;
@@ -190,8 +301,88 @@ summary {
   font-weight: 600;
 }
 :focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 3px solid var(--brand-foreground);
   outline-offset: 3px;
+}
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  color: var(--foreground);
+  background: var(--card);
+  border: 2px solid var(--brand-foreground);
+  border-radius: 0.75rem;
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+.recipient-row,
+.import-preview,
+.reminder-panel {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.recipient-row > summary {
+  padding: 0.5rem 0;
+  min-height: 44px;
+}
+.recipient-row form label {
+  display: grid;
+  gap: 0.5rem;
+}
+.import-preview ul,
+.merchant-check ul {
+  padding-left: 1.25rem;
+  overflow-wrap: anywhere;
+}
+.reminder-list {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+.reminder-list li {
+  display: grid;
+  gap: 0.25rem;
+  padding-block: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.reminder-list a {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.reminder-list span,
+.reminder-list time {
+  color: var(--muted-foreground);
+}
+.gift-pagination {
+  align-items: center;
+  justify-content: center;
+}
+.gift-pagination p {
+  min-width: 8rem;
+  text-align: center;
+}
+@media (pointer: coarse) {
+  select,
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea {
+    min-height: 44px;
+    font-size: max(1rem, 16px);
+  }
+  .product-link,
+  .list-back,
+  .secondary-link,
+  .primary-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
 }
 [role="alert"] {
   color: var(--destructive, #b91c1c);
@@ -352,6 +543,37 @@ p {
   display: grid;
   place-items: center;
   overflow: hidden;
+}
+.gift-media.gift-media-empty {
+  aspect-ratio: auto;
+  height: 88px;
+}
+.gift-media-empty .gift-placeholder svg {
+  width: 40px;
+  height: 40px;
+}
+.gift-search {
+  grid-column: 1 / -1;
+}
+.gift-filter-panel > .button-row {
+  margin-top: 1rem;
+}
+.public-list-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.public-list-header > a {
+  align-self: flex-start;
+  color: var(--brand-foreground);
+  font-weight: 700;
+}
+.public-list-header p {
+  max-width: 65ch;
+  color: var(--muted-foreground);
 }
 .gift-media .gift-photo {
   width: 100%;
@@ -664,7 +886,7 @@ input[type="file"] {
   align-items: center;
   min-height: 44px;
   font-weight: 600;
-  color: var(--primary);
+  color: var(--brand-foreground);
 }
 .list-sections {
   position: relative;
@@ -717,7 +939,7 @@ input[type="file"] {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   font-weight: 600;
-  color: var(--primary);
+  color: var(--brand-foreground);
 }
 .welcoming-empty {
   display: flex;
@@ -1298,8 +1520,8 @@ html[data-native="android"] body {
 .wishlist-page .list-meta {
   color: color-mix(in srgb, var(--foreground) 80%, var(--card));
 }
-.wishlist-page nav.button-row a[aria-current='page'],
-.wishlist-page nav.button-row a[aria-current='page']:hover {
+.wishlist-page nav.button-row a[aria-current="page"],
+.wishlist-page nav.button-row a[aria-current="page"]:hover {
   background: var(--primary);
   color: var(--primary-foreground);
   border-color: var(--primary);

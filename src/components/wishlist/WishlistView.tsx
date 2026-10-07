@@ -1,6 +1,7 @@
 import { OccasionIcon } from "@/components/ui/OccasionIcon";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
+import { MerchantLinks } from "./MerchantLinks";
 import { readWishlist } from "@/lib/wishlist-service";
 import { AddItemForm } from "./AddItemForm";
 import { ReserveButton } from "./ReserveButton";
@@ -18,10 +19,12 @@ export async function WishlistView({
   wishlist,
   loggedIn,
   token,
+  previewOnly = false,
 }: {
   wishlist: NonNullable<Awaited<ReturnType<typeof readWishlist>>>;
   loggedIn: boolean;
   token?: string;
+  previewOnly?: boolean;
 }) {
   const t = await getTranslations("wishlist");
   const c = await getTranslations("common");
@@ -33,6 +36,9 @@ export async function WishlistView({
         <h1>{wishlist.name}</h1>
         <div className="wishlist-header-meta">
           <p>{t("byOwner", { name: wishlist.owner.name || c("unknown") })}</p>
+          {wishlist.recipient && (
+            <p>{t("forRecipient", { name: wishlist.recipient.name })}</p>
+          )}
           {wishlist.event && (
             <p>
               {t("event")}: {wishlist.event.name}
@@ -138,11 +144,27 @@ export async function WishlistView({
                         {t("viewProduct")} <span aria-hidden="true">↗</span>
                       </a>
                     )}
+                  {(item.alternativeUrls || "")
+                    .split("\n")
+                    .filter((url) => /^https?:\/\//.test(url))
+                    .map((url, index) => (
+                      <a
+                        key={url}
+                        className="product-link"
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t("alternativeLink", { number: index + 1 })} ↗
+                      </a>
+                    ))}
                 </CardContent>
                 <CardFooter>
-                  {wishlist.isOwner ? (
+                  {previewOnly ? (
+                    <p>{t("previewOnly")}</p>
+                  ) : wishlist.isOwner ? (
                     wishlist.canEdit && (
-                      <AddItemForm wishlistId={wishlist.id} item={item} />
+                        <div className="stack"><AddItemForm wishlistId={wishlist.id} item={item} />{(item.url || item.alternativeUrls) && <MerchantLinks itemId={item.id} />}</div>
                     )
                   ) : loggedIn && item.isGroupGift ? (
                     <ContributionForm

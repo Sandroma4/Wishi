@@ -61,7 +61,7 @@
 }
 .navItem[aria-current="page"] {
   background: var(--secondary);
-  color: var(--primary);
+  color: var(--brand-foreground);
   font-weight: 700;
   box-shadow: none;
 }
@@ -211,7 +211,7 @@
 
   .navItem:hover {
     background-color: transparent;
-    color: var(--primary);
+    color: var(--brand-foreground);
   }
 
   .profile {
@@ -695,15 +695,15 @@
 
 @media (max-width: 768px) {
   .settings {
-    display: none;
-  }
-  .settings[data-home="true"] {
     display: block;
     position: fixed;
     top: 0.75rem;
     right: 0.75rem;
     width: 44px;
     z-index: 60;
+  }
+  .main .content {
+    padding-top: 4.25rem;
   }
   .settings > summary {
     width: 44px;

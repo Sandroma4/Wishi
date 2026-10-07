@@ -16,6 +16,10 @@ export default async function ReservationsPage() {
   if (!session?.user?.id) redirect("/" + locale + "/login");
   const reservations = await readMyReservations(prisma, session.user.id);
   const contributions = await readMyContributions(prisma, session.user.id);
+  const familyCount = await prisma.familyMember.count({
+    where: { userId: session.user.id },
+  });
+  const audit = await getTranslations("auditUI");
   const group = await getTranslations("contributions");
   const t = await getTranslations("reservations");
   return (
@@ -61,11 +65,12 @@ export default async function ReservationsPage() {
         <Card>
           <CardContent className="welcoming-empty">
             <div className="empty-art">
-              <OccasionIcon />
+              <OccasionIcon kind="giving" />
             </div>
             <p>{t("empty")}</p>
             <Link className="primary-link" href="/dashboard/family">
-              {t("explore")}
+              {familyCount ? t("explore") : audit("startFamily")}{" "}
+              <span aria-hidden="true">→</span>
             </Link>
           </CardContent>
         </Card>

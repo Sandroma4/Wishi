@@ -9,8 +9,10 @@ import { useTranslations } from "next-intl";
 
 export function CreateFamilyForm({
   showTitle = true,
+  onCreated,
 }: {
   showTitle?: boolean;
+  onCreated?: () => void;
 }) {
   const t = useTranslations("family");
   const errors = useTranslations("errors");
@@ -26,7 +28,10 @@ export function CreateFamilyForm({
     try {
       const result = await createFamily(new FormData(form));
       if (result.error) setError(errors(result.error));
-      else form.reset();
+      else {
+        form.reset();
+        onCreated?.();
+      }
     } catch {
       setError(errors("unexpected"));
     } finally {

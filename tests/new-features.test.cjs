@@ -18,6 +18,7 @@ const {
 const { readWishlist, reserveGift } = require("../src/lib/wishlist-service.ts");
 const { submitFeedback } = require("../src/lib/feedback-service.ts");
 const { wishlistSchema } = require("../src/lib/validation.ts");
+const { readGiftIdeas } = require("../src/lib/gift-ideas.ts");
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), "wishi-new-features-")),
   file = path.join(directory, "test.db");
 const sql = new DatabaseSync(file);
@@ -69,6 +70,32 @@ after(async () => {
     path.basename(directory).startsWith("wishi-new-features-")
   )
     fs.rmSync(directory, { recursive: true, force: true });
+});
+
+test("gift ideas exclude own, private, linked, reserved, deleted and funded gifts", async () => {
+  const [owner, a, b] = await Promise.all(["ideas-owner", "ideas-a", "ideas-b"].map(name => db.user.create({ data: { name, email: `${name}@example.test` } })));
+  const family = await db.family.create({ data: { name: "Ideas family", owner: { connect: { id: owner.id } }, members: { create: [{ userId: owner.id, role: "OWNER" }, { userId: a.id, role: "MEMBER" }] } } });
+  assert.ok(family.id);
+  const create = async (name, data = {}, item = {}) => {
+    const list = await db.wishlist.create({ data: { name, ownerId: owner.id, visibility: "FAMILY", ...data } });
+    return db.wishlistItem.create({ data: { title: name, wishlistId: list.id, priceCents: 1000, ...item } });
+  };
+  const available = await create("Available");
+  await create("Private", { visibility: "PRIVATE" });
+  await create("Link", { visibility: "LINK" });
+  await create("Archived", { archivedAt: new Date() });
+  await create("Deleted list", { deletedAt: new Date() });
+  await create("Deleted gift", {}, { deletedAt: new Date() });
+  await create("Own", { ownerId: a.id });
+  await create("Foreign family", { ownerId: b.id, visibility: "PUBLIC" });
+  const reserved = await create("Reserved");
+  await db.reservation.create({ data: { itemId: reserved.id, userId: a.id } });
+  const funded = await create("Funded", {}, { isGroupGift: true });
+  await db.contribution.create({ data: { itemId: funded.id, userId: a.id, amountCents: 1000 } });
+  const ideas = await readGiftIdeas(db, a.id);
+  assert.deepEqual(ideas.map(i => i.id), [available.id]);
+  assert.equal("contributions" in ideas[0], false);
+  assert.deepEqual(await readGiftIdeas(db, b.id), []);
 });
 test("duplicate detection drops trackers but preserves product variants", () => {
   assert.equal(

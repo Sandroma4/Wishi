@@ -28,7 +28,8 @@
 }
 
 .input:focus {
-  outline: none;
+  outline: 3px solid var(--brand-foreground);
+  outline-offset: 3px;
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
 }
@@ -44,5 +45,5 @@
 
 .errorText {
   font-size: 0.875rem;
-  color: #ef4444;
+  color: var(--destructive);
 }

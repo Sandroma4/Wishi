@@ -16,6 +16,14 @@ async function validEvent(eventId: string | null, userId: string) {
     )
   );
 }
+async function validRecipient(id: string | null, userId: string) {
+  return (
+    !id ||
+    Boolean(
+      await prisma.recipient.findFirst({ where: { id, ownerId: userId } }),
+    )
+  );
+}
 export async function createWishlist(form: FormData) {
   const session = await auth();
   if (!session?.user?.id) return { error: "unauthorized" };
@@ -25,7 +33,10 @@ export async function createWishlist(form: FormData) {
       error: "invalidFields",
       fields: Object.keys(parsed.error.flatten().fieldErrors),
     };
-  if (!(await validEvent(parsed.data.eventId, session.user.id)))
+  if (
+    !(await validEvent(parsed.data.eventId, session.user.id)) ||
+    !(await validRecipient(parsed.data.recipientId, session.user.id))
+  )
     return { error: "forbidden" };
   const list = await prisma.wishlist.create({
     data: { ...parsed.data, ownerId: session.user.id },
@@ -42,7 +53,10 @@ export async function updateWishlist(id: string, form: FormData) {
       error: "invalidFields",
       fields: Object.keys(parsed.error.flatten().fieldErrors),
     };
-  if (!(await validEvent(parsed.data.eventId, session.user.id)))
+  if (
+    !(await validEvent(parsed.data.eventId, session.user.id)) ||
+    !(await validRecipient(parsed.data.recipientId, session.user.id))
+  )
     return { error: "forbidden" };
   const updated = await prisma.wishlist.updateMany({
     where: { id, ownerId: session.user.id, archivedAt: null, deletedAt: null },
@@ -97,6 +111,7 @@ export async function changeShareLink(id: string, revoke = false) {
 }
 export async function getMyWishlists(
   view: "active" | "archived" | "trash" = "active",
+  limit?: number,
 ) {
   const session = await auth();
   if (!session?.user?.id) return [];
@@ -111,6 +126,9 @@ export async function getMyWishlists(
           }),
     },
     orderBy: { createdAt: "desc" },
+    ...(limit === undefined
+      ? {}
+      : { take: Math.min(Math.max(Math.trunc(limit), 1), 100) }),
     select: {
       id: true,
       name: true,

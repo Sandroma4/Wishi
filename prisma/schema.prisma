@@ -9,6 +9,7 @@ datasource db {
 }
 
 model User {
+  recipients Recipient[]
   id             String              @id @default(cuid())
   name           String?
   email          String?             @unique
@@ -138,6 +139,8 @@ model Invitation {
 }
 
 model Wishlist {
+  recipientId String?
+  recipient Recipient? @relation(fields: [recipientId], references: [id], onDelete: SetNull)
   occasion    String?
   neededBy    String?
   preferences String?
@@ -166,6 +169,7 @@ model Wishlist {
 }
 
 model WishlistItem {
+  alternativeUrls String @default("")
   isGroupGift   Boolean        @default(false)
   contributions Contribution[]
   deletedAt     DateTime?
@@ -197,6 +201,15 @@ model WishlistItem {
 
   @@index([wishlistId])
   @@index([wishlistId, deletedAt])
+}
+
+model Recipient {
+  id String @id @default(cuid())
+  name String
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  wishlists Wishlist[]
+  @@index([ownerId])
 }
 
 model Reservation {

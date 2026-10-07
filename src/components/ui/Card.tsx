@@ -21,11 +21,16 @@ export function CardHeader({ children, className = "", ...props }: CardProps) {
   );
 }
 
-export function CardTitle({ children, className = "", ...props }: CardProps) {
+export function CardTitle({
+  children,
+  className = "",
+  as: Tag = "h2",
+  ...props
+}: CardProps & { as?: "h1" | "h2" | "h3" }) {
   return (
-    <h3 className={`${styles.title} ${className}`} {...props}>
+    <Tag className={`${styles.title} ${className}`} {...props}>
       {children}
-    </h3>
+    </Tag>
   );
 }
 

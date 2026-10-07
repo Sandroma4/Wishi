@@ -10,16 +10,24 @@ import { WishlistManager } from "@/components/wishlist/WishlistManager";
 import { ListLifecycle } from "@/components/wishlist/ListLifecycle";
 import { getTrashedGifts } from "@/app/actions/item";
 import { GiftTrash } from "@/components/wishlist/GiftTrash";
+import { ownerPreview } from "@/lib/convenience";
 export default async function WishlistDetailsPage({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ from?: string }>;
+  searchParams: Promise<{ from?: string; preview?: string }>;
 }) {
   const { id } = await params;
   const wishlist = await getWishlistById(id);
   if (!wishlist) notFound();
+  const preview = wishlist.isOwner && (await searchParams).preview === "1";
+  const recipients = wishlist.isOwner
+    ? await prisma.recipient.findMany({
+        where: { ownerId: wishlist.ownerId },
+        select: { id: true, name: true },
+      })
+    : [];
   const nav = await getTranslations("listNavigation");
   const from = (await searchParams).from;
   const back = wishlist.isOwner
@@ -65,7 +73,7 @@ export default async function WishlistDetailsPage({
           </svg>
           {nav(wishlist.isOwner ? "back" : "backFamily")}
         </Link>
-        {wishlist.canEdit && (
+        {wishlist.canEdit && !preview && (
           <details
             id="list-settings"
             className="form-options list-detail-options list-settings-control"
@@ -99,6 +107,7 @@ export default async function WishlistDetailsPage({
                 ])}
                 events={events}
                 initial={wishlist}
+                recipients={recipients}
               />
               <div className="list-sensitive-actions">
                 <h3>{nav("manage")}</h3>
@@ -111,7 +120,7 @@ export default async function WishlistDetailsPage({
             </div>
           </details>
         )}
-        {wishlist.isOwner && !wishlist.canEdit && (
+        {wishlist.isOwner && !wishlist.canEdit && !preview && (
           <details
             id="list-manage"
             className="form-options list-detail-options list-settings-control"
@@ -136,12 +145,31 @@ export default async function WishlistDetailsPage({
           </details>
         )}
       </div>
-      <WishlistView wishlist={wishlist} loggedIn />
+      {wishlist.isOwner && (
+        <Link
+          className="secondary-link"
+          href={`/dashboard/wishlists/${id}${preview ? "" : "?preview=1"}`}
+        >
+          {(await getTranslations("wishlist"))(
+            preview ? "exitPreview" : "previewAsGuest",
+          )}
+        </Link>
+      )}
+      {preview && (
+        <p role="status">
+          {(await getTranslations("wishlist"))("previewHelp")}
+        </p>
+      )}
+      <WishlistView
+        wishlist={preview ? ownerPreview(wishlist) : wishlist}
+        loggedIn
+        previewOnly={preview}
+      />
 
       {wishlist.archivedAt && (
         <p>{(await getTranslations("listLifecycle"))("archiveHelp")}</p>
       )}
-      {wishlist.canEdit && (
+      {wishlist.canEdit && !preview && (
         <section id="list-share">
           <WishlistManager
             id={id}
@@ -150,7 +178,7 @@ export default async function WishlistDetailsPage({
           />
         </section>
       )}
-      {wishlist.canEdit && <GiftTrash gifts={await getTrashedGifts(id)} />}
+      {wishlist.canEdit && !preview && <GiftTrash gifts={await getTrashedGifts(id)} />}
     </div>
   );
 }

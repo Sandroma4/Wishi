@@ -9,6 +9,7 @@ import {
 } from "@/lib/gift-search";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { paginateGifts } from "@/lib/gift-search";
 const initial: GiftFilters = {
   query: "",
   maxPrice: "",
@@ -24,13 +25,17 @@ export function GiftBrowser({
   owner: boolean;
 }) {
   const t = useTranslations("giftSearch");
+  const p = useTranslations("improvements");
+  const [page, setPage] = useState(1);
   const flow = useTranslations("uiFlow");
   const w = useTranslations("wishlist");
   const locale = useLocale();
   const id = useId();
   const [filters, setFilters] = useState(initial);
-  const change = (key: keyof GiftFilters, value: string) =>
+  const change = (key: keyof GiftFilters, value: string) => {
+    setPage(1);
     setFilters((current) => ({ ...current, [key]: value }));
+  };
   const mixedCurrencies =
     new Set(
       gifts
@@ -44,6 +49,7 @@ export function GiftBrowser({
     locale,
   );
   const { totals, unpriced } = giftTotals(visible);
+  const paged = paginateGifts(visible, page);
   return (
     <div className="stack gift-browser">
       <div className="gift-summary">
@@ -88,31 +94,34 @@ export function GiftBrowser({
             />
           </div>
         </div>
-        <div className="stack">
-          <label htmlFor={id + "-sort"}>{t("sort")}</label>
-          <select
-            id={id + "-sort"}
-            value={filters.sort}
-            onChange={(e) => change("sort", e.target.value)}
-          >
-            {["recent", "priority", "priceAsc", "priceDesc", "name"].map(
-              (value) => (
-                <option key={value} value={value}>
-                  {t(value)}
-                </option>
-              ),
-            )}
-          </select>
-        </div>
       </div>
-      <details className="form-options list-detail-options">
+      <details className="form-options list-detail-options gift-filter-panel">
         <summary>
-          {flow("moreFilters")}{" "}
+          {flow("sortAndFilters")}{" "}
           {(filters.maxPrice ||
             filters.priority !== "all" ||
-            filters.status !== "all") && <span>· {flow("filtersActive")}</span>}
+            filters.status !== "all" ||
+            filters.sort !== "recent") && (
+            <span>· {flow("filtersActive")}</span>
+          )}
         </summary>
         <div className="gift-filters">
+          <div className="stack">
+            <label htmlFor={id + "-sort"}>{t("sort")}</label>
+            <select
+              id={id + "-sort"}
+              value={filters.sort}
+              onChange={(e) => change("sort", e.target.value)}
+            >
+              {["recent", "priority", "priceAsc", "priceDesc", "name"].map(
+                (value) => (
+                  <option key={value} value={value}>
+                    {t(value)}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>
           {!mixedCurrencies && (
             <Input
               id={id + "-budget"}
@@ -160,47 +169,77 @@ export function GiftBrowser({
             </div>
           )}
         </div>
-      </details>
-      <div className="button-row">
-        <Button
-          variant="secondary"
-          aria-pressed={filters.priority === "ESSENTIAL"}
-          onClick={() =>
-            change(
-              "priority",
-              filters.priority === "ESSENTIAL" ? "all" : "ESSENTIAL",
-            )
-          }
-        >
-          {t("quickEssential")}
-        </Button>
-        {!owner && (
+        <div className="button-row">
           <Button
             variant="secondary"
-            aria-pressed={filters.status === "available"}
+            aria-pressed={filters.priority === "ESSENTIAL"}
             onClick={() =>
               change(
-                "status",
-                filters.status === "available" ? "all" : "available",
+                "priority",
+                filters.priority === "ESSENTIAL" ? "all" : "ESSENTIAL",
               )
             }
           >
-            {t("available")}
+            {t("quickEssential")}
           </Button>
-        )}
-        <Button variant="secondary" onClick={() => setFilters(initial)}>
-          {t("reset")}
-        </Button>
-        <p role="status">
-          {t("shown", { count: visible.length, total: gifts.length })}
-        </p>
-      </div>
+          {!owner && (
+            <Button
+              variant="secondary"
+              aria-pressed={filters.status === "available"}
+              onClick={() =>
+                change(
+                  "status",
+                  filters.status === "available" ? "all" : "available",
+                )
+              }
+            >
+              {t("available")}
+            </Button>
+          )}
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setFilters(initial);
+              setPage(1);
+            }}
+          >
+            {t("reset")}
+          </Button>
+        </div>
+      </details>
+      <p role="status" className="result-count">
+        {t("shown", { count: paged.items.length, total: gifts.length })}
+      </p>
       {!visible.length && <p>{t("noResults")}</p>}
       <div className="gift-grid">
-        {visible.map((gift) => (
+        {paged.items.map((gift) => (
           <div key={gift.id}>{gift.card}</div>
         ))}
       </div>
+      {paged.pages > 1 && (
+        <nav
+          className="button-row gift-pagination"
+          aria-label={p("pagination")}
+        >
+          <Button
+            variant="secondary"
+            disabled={paged.page === 1}
+            onClick={() => setPage(paged.page - 1)}
+          >
+            {p("previous")}
+          </Button>
+          <p role="status">
+            {p("page", { page: paged.page, pages: paged.pages })}
+          </p>
+          <Button
+            variant="secondary"
+            disabled={paged.page === paged.pages}
+            onClick={() => setPage(paged.page + 1)}
+          >
+            {p("next")}
+          </Button>
+        </nav>
+      )}
     </div>
   );
 }

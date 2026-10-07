@@ -7,6 +7,8 @@ import { getMyWishlists, getFamilyWishlists } from "@/app/actions/wishlist";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Link } from "@/i18n/routing";
+import { Reminders } from "@/components/dashboard/Reminders";
+import { readReminders } from "@/lib/reminders";
 export default async function DashboardPage() {
   const [t, w, c, locale, events, lists, familyLists, session] =
     await Promise.all([
@@ -14,8 +16,8 @@ export default async function DashboardPage() {
       getTranslations("wishlist"),
       getTranslations("common"),
       getLocale(),
-      getEvents(),
-      getMyWishlists(),
+      getEvents(false, 3),
+      getMyWishlists("active", 3),
       getFamilyWishlists(undefined, 5),
       auth(),
     ]);
@@ -31,6 +33,7 @@ export default async function DashboardPage() {
       ? prisma.familyMember.count({ where: { userId: session.user.id } })
       : 0,
   ]);
+  const audit = await getTranslations("auditUI");
   return (
     <div className="stack">
       <header className={styles.greeting}>
@@ -41,30 +44,74 @@ export default async function DashboardPage() {
         </h1>
         <p>{t("intro")}</p>
       </header>
-      {(!familyCount || !lists.length) && (
-        <Card className={styles.summaryCard}>
-          <CardHeader>
-            <CardTitle>{guide("title")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>{guide("intro")}</p>
-            <ol className="onboarding-steps">
-              <li>
-                <Link href="/dashboard/family">{guide("family")}</Link>
-                <p>{familyCount ? guide("familyDone") : guide("familyHelp")}</p>
-              </li>
-              <li>
-                <Link href="/dashboard/wishlists/create">{guide("list")}</Link>
-                <p>{lists.length ? guide("listDone") : guide("listHelp")}</p>
-              </li>
-              <li>
-                <Link href="/dashboard/wishlists">{guide("share")}</Link>
+      <div className="button-row dashboard-actions">
+        <Link className="primary-link" href="/quick-add">
+          {(await getTranslations("convenience"))("quickAdd")}
+        </Link>
+        <Link className="secondary-link" href="/dashboard/gift-ideas">
+          {(await getTranslations("convenience"))("ideas")}
+        </Link>
+      </div>
+      <div className={styles.overview}>
+        {session?.user?.id && (
+          <Reminders reminders={await readReminders(prisma, session.user.id)} />
+        )}
+        {(!familyCount || !lists.length) && (
+          <details className="onboarding-panel">
+            <summary>
+              <strong>{guide("title")}</strong>
+              <span>
+                {audit("progress", {
+                  count: Number(!!familyCount) + Number(!!lists.length),
+                  total: 2,
+                })}
+              </span>
+            </summary>
+            <div className="stack">
+              <p>{guide("intro")}</p>
+              <ol className="onboarding-steps">
+                <li>
+                  <strong>{guide("family")}</strong>
+                  <p>
+                    {familyCount ? guide("familyDone") : guide("familyHelp")}
+                  </p>
+                  <Link className="secondary-link" href="/dashboard/family">
+                    {familyCount ? audit("seeFamily") : audit("startFamily")}
+                  </Link>
+                </li>
+                <li>
+                  <strong>{guide("list")}</strong>
+                  <p>{lists.length ? guide("listDone") : guide("listHelp")}</p>
+                  <Link
+                    className="secondary-link"
+                    href={
+                      lists.length
+                        ? "/dashboard/wishlists"
+                        : "/dashboard/wishlists/create"
+                    }
+                  >
+                    {lists.length ? audit("seeLists") : t("newWishlist")}
+                  </Link>
+                </li>
+              </ol>
+              <div>
+                <strong>{guide("share")}</strong>
                 <p>{guide("shareHelp")}</p>
-              </li>
-            </ol>
-          </CardContent>
-        </Card>
-      )}
+                <Link
+                  className="secondary-link"
+                  href={
+                    lists.length
+                      ? `/dashboard/wishlists/${lists[0].id}`
+                      : "/dashboard/wishlists/create"
+                  }
+                >
+                  {lists.length ? guide("share") : t("newWishlist")}
+                </Link>
+              </div>
+            </div>
+          </details>
+        )}
+      </div>
       <div className={styles.grid}>
         <Card className={`${styles.summaryCard} ${styles.listsCard}`}>
           <CardHeader>
@@ -80,7 +127,7 @@ export default async function DashboardPage() {
               </div>
             ) : (
               <ul className={styles.entries}>
-                {lists.slice(0, 3).map((list) => (
+                {lists.map((list) => (
                   <li key={list.id}>
                     <Link href={"/dashboard/wishlists/" + list.id}>
                       {list.name}
@@ -113,7 +160,7 @@ export default async function DashboardPage() {
               </div>
             ) : (
               <ul className={styles.entries}>
-                {events.slice(0, 3).map((event) => (
+                {events.map((event) => (
                   <li key={event.id}>
                     <Link href={`/dashboard/events/${event.id}`}>
                       {event.name}

@@ -55,11 +55,11 @@
 
 .priorityBadge {
   font-weight: 500;
-  color: var(--primary);
+  color: var(--brand-foreground);
 }
 
 .itemLink {
-  color: var(--primary);
+  color: var(--brand-foreground);
   text-decoration: underline;
   text-decoration-color: transparent;
   transition: all 0.2s;

@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { fields, eventSchema, eventDetailsSchema } from "@/lib/validation";
 import { readEvent, editEvent, removeEvent } from "@/lib/event-service";
 import { refreshWishlists } from "@/lib/refresh";
-export async function getEvents(includePast = false) {
+export async function getEvents(includePast = false, limit?: number) {
   const session = await auth();
   if (!session?.user?.id) return [];
   const today = new Date();
@@ -14,8 +14,11 @@ export async function getEvents(includePast = false) {
       family: { members: { some: { userId: session.user.id } } },
       date: includePast ? { lt: today } : { gte: today },
     },
-    include: { family: true },
+    include: { family: { select: { id: true, name: true } } },
     orderBy: { date: includePast ? "desc" : "asc" },
+    ...(limit === undefined
+      ? {}
+      : { take: Math.min(Math.max(Math.trunc(limit), 1), 100) }),
   });
 }
 export async function getEventFamilies() {

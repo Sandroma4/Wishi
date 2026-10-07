@@ -24,6 +24,11 @@ export function WishlistManager({
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
   async function share(revoke: boolean) {
+    if (
+      link &&
+      !window.confirm(t(revoke ? "confirmRevokeShare" : "confirmRenewShare"))
+    )
+      return;
     setPending(true);
     setMessage("");
     try {
@@ -67,7 +72,7 @@ export function WishlistManager({
               disabled={pending}
               onClick={() => share(false)}
             >
-              {t("share")}
+              {t(link ? "renewShare" : "createShare")}
             </Button>
             {link && (
               <Button

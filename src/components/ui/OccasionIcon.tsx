@@ -1,7 +1,7 @@
 export function OccasionIcon({
   kind = "gift",
 }: {
-  kind?: "gift" | "calendar" | "people";
+  kind?: "gift" | "calendar" | "people" | "giving";
 }) {
   return (
     <svg
@@ -15,7 +15,13 @@ export function OccasionIcon({
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {kind === "calendar" ? (
+      {kind === "giving" ? (
+        <>
+          <rect x="9" y="3" width="10" height="7" rx="1" />
+          <path d="M14 3v7M2 16l4-4h4l3 3h5a2 2 0 0 1 0 4h-7l-5 2-4-5Z" />
+          <path d="m2 16 3 5" />
+        </>
+      ) : kind === "calendar" ? (
         <>
           <rect x="3" y="5" width="18" height="16" rx="3" />
           <path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2" />

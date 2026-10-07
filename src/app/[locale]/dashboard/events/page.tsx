@@ -1,3 +1,4 @@
+import { FamilyActions } from "@/components/family/FamilyActions";
 import { EventDate } from "@/components/events/EventDate";
 import { OccasionIcon } from "@/components/ui/OccasionIcon";
 import styles from "./page.module.css";
@@ -35,7 +36,7 @@ export default async function EventsPage({
           <p className="page-intro">{t("visualIntro")}</p>
         </div>
       </header>
-      <nav className="button-row" aria-label={t("period")}>
+      <nav className="button-row segmented-filters" aria-label={t("period")}>
         <Link
           href="/dashboard/events"
           aria-current={!past ? "page" : undefined}
@@ -68,11 +69,7 @@ export default async function EventsPage({
                         : "familyFirst",
                   )}
                 </p>
-                {!past && !families.length && (
-                  <Link className="primary-link" href="/dashboard/family">
-                    {flow("createFamily")}
-                  </Link>
-                )}
+                {!past && !families.length && <FamilyActions join />}
               </CardContent>
             </Card>
           ) : (

@@ -11,6 +11,11 @@ export type SearchableGift = {
   isReserved: boolean;
   reservedByMe: boolean;
 };
+export function paginateGifts<T>(items: T[], requested: number, size = 24) {
+  const pages = Math.max(1, Math.ceil(items.length / size));
+  const page = Math.min(pages, Math.max(1, Number.isFinite(requested) ? Math.trunc(requested) : 1));
+  return { page, pages, items: items.slice((page - 1) * size, page * size) };
+}
 export type GiftFilters = {
   query: string;
   maxPrice: string;

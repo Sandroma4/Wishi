@@ -8,6 +8,7 @@
     "start": "node scripts/hosted-start.cjs",
     "lint": "eslint",
     "test": "node --test tests/*.test.cjs",
+    "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:migrate": "node scripts/migrate.cjs",
@@ -37,6 +38,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/qrcode": "^1.5.6",
